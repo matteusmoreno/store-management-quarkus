@@ -8,14 +8,14 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record UpdateCustomerRequest(
-        @NotNull(message = "Coloca a porra do id")
+        @NotNull(message = "ID is required")
         UUID id,
         String name,
         LocalDate birthDate,
         @Email(message = "Invalid email format")
         String email,
-        @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format")
+        @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format. Correct format is XXX.XXX.XXX-XX")
         String cpf,
-        @Pattern(regexp = "\\d{5}-\\d{3}", message = "Invalid CEP format")
+        @Pattern(regexp = "\\d{5}-\\d{3}", message = "Invalid CEP format. Correct format is XXXXX-XXX")
         String zipcode) {
 }

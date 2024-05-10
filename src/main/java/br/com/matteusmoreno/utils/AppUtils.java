@@ -5,7 +5,6 @@ import br.com.matteusmoreno.client.ViaCepResponse;
 import br.com.matteusmoreno.domain.Address;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -27,4 +26,6 @@ public class AppUtils {
 
         return Period.between(birtDate, currentlyDate).getYears();
     }
+
+
 }
