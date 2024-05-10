@@ -1,7 +1,6 @@
 package br.com.matteusmoreno.domain;
 
-import br.com.matteusmoreno.request.CreateCostumerRequest;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import br.com.matteusmoreno.request.CreateCustomerRequest;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,6 +15,7 @@ public class Customer extends PanacheEntityBase {
     private Long id;
     private String name;
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Customer(){}
@@ -24,7 +24,7 @@ public class Customer extends PanacheEntityBase {
         this.name = name;
     }
 
-    public Customer(CreateCostumerRequest request) {
+    public Customer(CreateCustomerRequest request) {
         this.name = request.name();
     }
 

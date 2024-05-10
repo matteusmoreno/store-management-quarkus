@@ -1,16 +1,19 @@
 package br.com.matteusmoreno.controller;
 
 import br.com.matteusmoreno.domain.Customer;
-import br.com.matteusmoreno.repository.CustomerRepository;
-import br.com.matteusmoreno.request.CreateCostumerRequest;
+import br.com.matteusmoreno.request.CreateCustomerRequest;
+import br.com.matteusmoreno.request.UpdateCustomerRequest;
 import br.com.matteusmoreno.response.CustomerDetailsResponse;
 import br.com.matteusmoreno.service.CustomerService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -26,17 +29,29 @@ public class CustomerController {
 
     @POST
     @Transactional
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response.Status create(CreateCostumerRequest request) {
+    public Response createCustomer(@RequestBody @Valid CreateCustomerRequest request, @Context UriInfo uriInfo) {
         Customer customer = customerService.createCustomer(request);
-        return Response.Status.CREATED;
+
+        // Construa a URI para o recurso criado usando UriBuilder
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(customer.getId().toString());
+        URI uri = uriBuilder.build();
+
+        return Response.created(uri).entity(new CustomerDetailsResponse(customer)).build();
     }
 
     @GET
-    public List<Customer> list() {
-        Customer customer = new Customer("Matteus");
-        listCustomers.add(customer);
+    @Path("/{id}")
+    public Response details(@PathParam("id") Long id) {
+        Customer customer = customerService.customerDetails(id);
 
-        return listCustomers;
+        return Response.ok(new CustomerDetailsResponse(customer)).build();
+    }
+
+    @PUT
+    @Transactional
+    public Response update(@RequestBody UpdateCustomerRequest request) {
+        Customer customer = customerService.updateCustomer(request);
+
+        return Response.ok(new CustomerDetailsResponse(customer)).build();
     }
 }
