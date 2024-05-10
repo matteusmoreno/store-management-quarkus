@@ -18,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/customers")
 public class CustomerController {
@@ -25,10 +26,9 @@ public class CustomerController {
     @Inject
     CustomerService customerService;
 
-    List<Customer> listCustomers = new ArrayList<>();
 
     @POST
-    @Transactional
+    @Path("/create")
     public Response createCustomer(@RequestBody @Valid CreateCustomerRequest request, @Context UriInfo uriInfo) {
         Customer customer = customerService.createCustomer(request);
 
@@ -40,17 +40,33 @@ public class CustomerController {
     }
 
     @GET
-    @Path("/{id}")
-    public Response details(@PathParam("id") Long id) {
+    @Path("/details/{id}")
+    public Response details(@PathParam("id") UUID id) {
         Customer customer = customerService.customerDetails(id);
 
         return Response.ok(new CustomerDetailsResponse(customer)).build();
     }
 
     @PUT
-    @Transactional
-    public Response update(@RequestBody UpdateCustomerRequest request) {
+    @Path("/update")
+    public Response update(@RequestBody @Valid UpdateCustomerRequest request) {
         Customer customer = customerService.updateCustomer(request);
+
+        return Response.ok(new CustomerDetailsResponse(customer)).build();
+    }
+
+    @DELETE
+    @Path("/disable/{id}")
+    public Response disable(@PathParam("id") UUID id) {
+        customerService.disableCustomer(id);
+
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/enable/{id}")
+    public Response enable(@PathParam("id") UUID id) {
+       Customer customer = customerService.enableCustomer(id);
 
         return Response.ok(new CustomerDetailsResponse(customer)).build();
     }
