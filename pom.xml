@@ -79,7 +79,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jackson</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
@@ -107,6 +106,7 @@
   </dependencies>
   <build>
     <plugins>
+      <!--
       <plugin>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
@@ -120,6 +120,7 @@
           </schemas>
         </configuration>
       </plugin>
+      -->
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>

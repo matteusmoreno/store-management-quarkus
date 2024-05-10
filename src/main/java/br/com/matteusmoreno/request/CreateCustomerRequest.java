@@ -15,6 +15,8 @@ public record CreateCustomerRequest(
         @NotBlank(message = "e-mail is required")
         @Email(message = "Invalid email format")
         String email,
+        @Pattern(regexp = "\\(\\d{2}\\)\\d{9}", message = "Invalid phone number format. Correct format is (XX)XXXXXXXXX")
+        String phone,
         @NotBlank(message = "CPF is required")
         @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format. Correct format is XXX.XXX.XXX-XX")
         String cpf,

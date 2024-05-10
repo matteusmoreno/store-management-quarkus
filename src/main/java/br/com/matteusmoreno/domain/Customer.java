@@ -25,6 +25,7 @@ public class Customer extends PanacheEntityBase {
     @Column(name = "birth_date")
     private LocalDate birthDate;
     private Integer age;
+    private String phone;
     private String email;
     private String cpf;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -41,6 +42,7 @@ public class Customer extends PanacheEntityBase {
     public Customer(CreateCustomerRequest request) {
         this.name = request.name();
         this.birthDate = request.birthDate();
+        this.phone = request.phone();
         this.email = request.email();
         this.cpf = request.cpf();
         this.createdAt = LocalDateTime.now();

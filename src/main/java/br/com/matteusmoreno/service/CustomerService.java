@@ -54,6 +54,9 @@ public class CustomerService {
         if (request.email() != null) {
             customer.setEmail(request.email());
         }
+        if (request.phone() != null) {
+            customer.setPhone(request.phone());
+        }
         if (request.cpf() != null) {
             customer.setCpf(request.cpf());
         }

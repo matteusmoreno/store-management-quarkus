@@ -4,6 +4,7 @@ CREATE TABLE customers (
     birth_date DATE NOT NULL,
     age INTEGER NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(14) UNIQUE,
     cpf VARCHAR(14) UNIQUE,
     address_id BIGINT,
     created_at TIMESTAMP,
