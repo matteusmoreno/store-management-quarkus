@@ -1,13 +1,10 @@
-CREATE TABLE employees (
+CREATE TABLE suppliers (
     id BINARY(16) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    birth_date DATE NOT NULL,
-    age INTEGER NOT NULL,
-    phone VARCHAR(255),
-    salary DECIMAL(19, 2) NOT NULL,
-    role VARCHAR(50),
+    cnpj VARCHAR(26) NOT NULL,
+    phone VARCHAR(20),
     email VARCHAR(255),
-    cpf VARCHAR(14),
+    site VARCHAR(255),
     address_id BIGINT,
     created_at TIMESTAMP,
     updated_at TIMESTAMP,
