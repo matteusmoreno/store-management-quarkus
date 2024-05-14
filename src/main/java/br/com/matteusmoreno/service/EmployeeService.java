@@ -1,7 +1,6 @@
 package br.com.matteusmoreno.service;
 
 import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Customer;
 import br.com.matteusmoreno.domain.Employee;
 import br.com.matteusmoreno.repository.EmployeeRepository;
 import br.com.matteusmoreno.request.CreateEmployeeRequest;

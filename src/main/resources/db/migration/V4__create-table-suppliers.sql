@@ -1,4 +1,4 @@
-CREATE TABLE suppliers (
+CREATE TABLE IF NOT EXISTS suppliers (
     id BINARY(16) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     cnpj VARCHAR(26) NOT NULL,
@@ -11,4 +11,5 @@ CREATE TABLE suppliers (
     deleted_at TIMESTAMP,
     active BOOLEAN,
     FOREIGN KEY (address_id) REFERENCES addresses(id)
-);
+) engine=InnoDB;
+
