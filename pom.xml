@@ -73,6 +73,12 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-jsonb</artifactId>
     </dependency>
+    <!--
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
+    </dependency>
+    -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-jackson</artifactId>
@@ -80,6 +86,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-spring-data-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -95,10 +105,7 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-orm-panache</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -110,14 +117,36 @@
       <artifactId>quarkus-junit5-mockito</artifactId>
       <scope>test</scope>
     </dependency>
-
-
   </dependencies>
   <build>
     <plugins>
-
       <plugin>
+        <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.10</version>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <append>true</append>
+              <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
+              <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
+            </configuration>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
           <append>true</append>
           <excludes>
@@ -126,36 +155,11 @@
             <exclude>**/PerformanceAlertInterceptor.class</exclude>
           </excludes>
         </configuration>
-        <executions>
-          <execution>
-            <configuration>
-              <append>true</append>
-              <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
-              <exclClassLoaders>*QuarkusClassLoader</exclClassLoaders>
-            </configuration>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-            <id>default-prepare-agent</id>
-          </execution>
-          <execution>
-            <configuration>
-              <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>
-            </configuration>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <id>report</id>
-            <phase>test</phase>
-          </execution>
-        </executions>
-        <groupId>org.jacoco</groupId>
-        <version>0.8.10</version>
       </plugin>
       <plugin>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
-        <version>10.12.0</version> <!-- Use a versão mais recente do Flyway -->
+        <version>10.12.0</version>
         <executions>
           <execution>
             <goals>
@@ -170,8 +174,6 @@
           <password>root</password>
         </configuration>
       </plugin>
-
-
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>

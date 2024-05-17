@@ -25,7 +25,8 @@ class AppUtilsTest {
 
     @Test
     public void testSetAddressAttributes() {
-        ViaCepResponse mockResponse = new ViaCepResponse("28994-675", "Rua Alfredo Menezes", "Saquarema", "Bacaxá (Bacaxá)", "RJ");
+        ViaCepResponse mockResponse = new ViaCepResponse("28994-675", "Rua Alfredo Menezes", "Saquarema",
+                "Bacaxá (Bacaxá)", "RJ");
         when(viaCepClient.getAddress("28994-675")).thenReturn(mockResponse);
 
         Address address = appUtils.setAddressAttributes("28994-675");

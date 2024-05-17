@@ -1,19 +1,13 @@
 package br.com.matteusmoreno.repository;
 
 import br.com.matteusmoreno.domain.Customer;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
-public class CustomerRepository implements PanacheRepository<Customer> {
+public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
-    public Customer findByUUID(UUID id) {
-        return find("id", id).firstResult();
-    }
+    List<Customer>findByAddressNeighborhoodContainingIgnoreCase(String neighborhood);
 
-    public Customer findByEmail(String email) {
-        return find("email", email).firstResult();
-    }
 }

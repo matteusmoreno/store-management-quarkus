@@ -20,18 +20,18 @@ public class ProductService {
     public Product createProduct(CreateProductRequest request) {
         Product product = new Product(request);
 
-        productRepository.persist(product);
+        productRepository.save(product);
 
         return product;
     }
 
     public Product productDetails(Long id) {
-        return productRepository.findById(id);
+        return productRepository.findById(id).orElseThrow();
     }
 
     @Transactional
     public Product updateProduct(UpdateProductRequest request) {
-        Product product = productRepository.findById(request.id());
+        Product product = productRepository.findById(request.id()).orElseThrow();
 
         if (request.name() != null) {
             product.setName(request.name());
@@ -50,23 +50,23 @@ public class ProductService {
         }
 
         product.setUpdatedAt(LocalDateTime.now());
-        productRepository.persist(product);
+        productRepository.save(product);
 
         return product;
     }
 
     @Transactional
     public void disableProduct(Long id) {
-        Product product = productRepository.findById(id);
+        Product product = productRepository.findById(id).orElseThrow();
         product.setActive(false);
         product.setDeletedAt(LocalDateTime.now());
 
-        productRepository.persist(product);
+        productRepository.save(product);
     }
 
     @Transactional
     public Product enableProduct(Long id) {
-        Product product = productRepository.findById(id);
+        Product product = productRepository.findById(id).orElseThrow();
         product.setActive(true);
         product.setDeletedAt(null);
         product.setUpdatedAt(LocalDateTime.now());

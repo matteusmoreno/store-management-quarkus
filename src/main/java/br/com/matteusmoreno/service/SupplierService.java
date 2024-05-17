@@ -30,18 +30,18 @@ public class SupplierService {
         Supplier supplier = new Supplier(request);
         supplier.setAddress(address);
 
-        supplierRepository.persist(supplier);
+        supplierRepository.save(supplier);
 
         return supplier;
     }
 
     public Supplier supplierDetails(UUID id) {
-        return supplierRepository.findByUUID(id);
+        return supplierRepository.findById(id).orElseThrow();
     }
 
     @Transactional
     public Supplier updateSupplier(UpdateSupplierRequest request) {
-        Supplier supplier = supplierRepository.findByUUID(request.id());
+        Supplier supplier = supplierRepository.findById(request.id()).orElseThrow();
 
         if (request.name() != null) {
             supplier.setName(request.name());
@@ -63,23 +63,23 @@ public class SupplierService {
         }
 
         supplier.setUpdatedAt(LocalDateTime.now());
-        supplierRepository.persist(supplier);
+        supplierRepository.save(supplier);
 
         return supplier;
     }
 
     @Transactional
     public void disableSupplier(UUID id) {
-        Supplier supplier = supplierRepository.findByUUID(id);
+        Supplier supplier = supplierRepository.findById(id).orElseThrow();
         supplier.setActive(false);
         supplier.setDeletedAt(LocalDateTime.now());
 
-        supplierRepository.persist(supplier);
+        supplierRepository.save(supplier);
     }
 
     @Transactional
     public Supplier enableSupplier(UUID id) {
-        Supplier supplier = supplierRepository.findByUUID(id);
+        Supplier supplier = supplierRepository.findById(id).orElseThrow();
         supplier.setActive(true);
         supplier.setDeletedAt(null);
         supplier.setUpdatedAt(LocalDateTime.now());

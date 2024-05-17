@@ -36,8 +36,8 @@ public class ServiceOrderService {
     public ServiceOrder createServiceOrder(CreateServiceOrderRequest request) {
         ServiceOrder serviceOrder = new ServiceOrder(request);
 
-        Customer customer = customerRepository.findByUUID(request.customer());
-        Employee employee = employeeRepository.findByUUID(request.employee());
+        Customer customer = customerRepository.findById(request.customer()).orElseThrow();
+        Employee employee = employeeRepository.findById(request.employee()).orElseThrow();
         List<Product> products = productRepository.findAllById(request.products());
 
         BigDecimal productsPrice = products.stream()
@@ -49,12 +49,12 @@ public class ServiceOrderService {
         serviceOrder.setEmployee(employee);
         serviceOrder.setProducts(products);
 
-        serviceOrderRepository.persist(serviceOrder);
+        serviceOrderRepository.save(serviceOrder);
 
         return serviceOrder;
     }
 
     public ServiceOrder serviceOrderDetails(UUID id) {
-        return serviceOrderRepository.findByUUID(id);
+        return serviceOrderRepository.findById(id).orElseThrow();
     }
 }

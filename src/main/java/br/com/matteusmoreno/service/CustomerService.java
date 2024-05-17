@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -31,17 +32,22 @@ public class CustomerService {
         customer.setAge(age);
         customer.setAddress(address);
 
-        customerRepository.persist(customer);
+        customerRepository.save(customer);
         return customer;
     }
 
-    public Customer customerDetails(UUID id) {
-        return customerRepository.findByUUID(id);
+    public Customer customerDetailsById(UUID id) {
+        return customerRepository.findById(id).orElseThrow();
+    }
+
+    public List<Customer> customerDetailsByNeighborhood(String neighborhood) {
+        return customerRepository.findByAddressNeighborhoodContainingIgnoreCase(neighborhood);
+
     }
 
     @Transactional
     public Customer updateCustomer(UpdateCustomerRequest request) {
-        Customer customer = customerRepository.findByUUID(request.id());
+        Customer customer = customerRepository.findById(request.id()).orElseThrow();
 
         if (request.name() != null) {
             customer.setName(request.name());
@@ -65,27 +71,28 @@ public class CustomerService {
         }
 
         customer.setUpdatedAt(LocalDateTime.now());
-        customerRepository.persist(customer);
+        customerRepository.save(customer);
 
         return customer;
     }
 
     @Transactional
     public void disableCustomer(UUID id) {
-        Customer customer = customerRepository.findByUUID(id);
+        Customer customer = customerRepository.findById(id).orElseThrow();
         customer.setActive(false);
         customer.setDeletedAt(LocalDateTime.now());
 
-        customerRepository.persist(customer);
+        customerRepository.save(customer);
     }
 
     @Transactional
     public Customer enableCustomer(UUID id) {
-        Customer customer = customerRepository.findByUUID(id);
+        Customer customer = customerRepository.findById(id).orElseThrow();
         customer.setActive(true);
         customer.setDeletedAt(null);
         customer.setUpdatedAt(LocalDateTime.now());
 
         return customer;
     }
+
 }

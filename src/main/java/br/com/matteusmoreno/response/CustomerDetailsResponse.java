@@ -2,29 +2,11 @@ package br.com.matteusmoreno.response;
 
 import br.com.matteusmoreno.domain.Address;
 import br.com.matteusmoreno.domain.Customer;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
-@JsonPropertyOrder({
-        "id",
-        "name",
-        "birthDate",
-        "age",
-        "phone",
-        "salary",
-        "role",
-        "email",
-        "cpf",
-        "address",
-        "createdAt",
-        "updatedAt",
-        "deletedAt",
-        "active"
-})
 public record CustomerDetailsResponse(
         UUID id,
         String name,

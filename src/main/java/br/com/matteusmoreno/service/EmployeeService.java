@@ -31,17 +31,17 @@ public class EmployeeService {
         employee.setAge(age);
         employee.setAddress(address);
 
-        employeeRepository.persist(employee);
+        employeeRepository.save(employee);
         return employee;
     }
 
     public Employee employeeDetails(UUID id) {
-        return employeeRepository.findByUUID(id);
+        return employeeRepository.findById(id).orElseThrow();
     }
 
     @Transactional
     public Employee updateEmployee(UpdateEmployeeRequest request) {
-        Employee employee = employeeRepository.findByUUID(request.id());
+        Employee employee = employeeRepository.findById(request.id()).orElseThrow();
         if (request.name() != null) {
             employee.setName(request.name());
         }
@@ -69,23 +69,23 @@ public class EmployeeService {
         }
 
         employee.setUpdatedAt(LocalDateTime.now());
-        employeeRepository.persist(employee);
+        employeeRepository.save(employee);
 
         return employee;
     }
 
     @Transactional
     public void disableEmployee(UUID id) {
-        Employee employee = employeeRepository.findByUUID(id);
+        Employee employee = employeeRepository.findById(id).orElseThrow();
         employee.setActive(false);
         employee.setDeletedAt(LocalDateTime.now());
 
-        employeeRepository.persist(employee);
+        employeeRepository.save(employee);
     }
 
     @Transactional
     public Employee enableCustomer(UUID id) {
-        Employee employee = employeeRepository.findByUUID(id);
+        Employee employee = employeeRepository.findById(id).orElseThrow();
         employee.setActive(true);
         employee.setDeletedAt(null);
         employee.setUpdatedAt(LocalDateTime.now());

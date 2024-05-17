@@ -6,7 +6,6 @@ import br.com.matteusmoreno.request.UpdateCustomerRequest;
 import br.com.matteusmoreno.response.CustomerDetailsResponse;
 import br.com.matteusmoreno.service.CustomerService;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -14,10 +13,11 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Path("/customers")
@@ -41,11 +41,21 @@ public class CustomerController {
 
     @GET
     @Path("/details/{id}")
-    public Response details(@PathParam("id") UUID id) {
-        Customer customer = customerService.customerDetails(id);
+    public Response detailsById(@PathParam("id") UUID id) {
+        Customer customer = customerService.customerDetailsById(id);
 
         return Response.ok(new CustomerDetailsResponse(customer)).build();
     }
+
+    @GET
+    @Path("/details-by-neighborhood/{neighborhood}")
+    public Response detailsByNeighborhood(@PathParam("neighborhood") String neighborhood) {
+
+        var customers = customerService.customerDetailsByNeighborhood(neighborhood);
+
+        return Response.ok(customers).build();
+    }
+
 
     @PUT
     @Path("/update")
