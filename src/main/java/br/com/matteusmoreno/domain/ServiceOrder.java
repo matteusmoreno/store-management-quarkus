@@ -32,7 +32,7 @@ public class ServiceOrder {
     @Enumerated(EnumType.STRING)
     @Column(name = "service_order_status")
     private ServiceOrderStatus serviceOrderStatus;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "service_order_products",
             joinColumns = @JoinColumn(name = "service_order_id"),

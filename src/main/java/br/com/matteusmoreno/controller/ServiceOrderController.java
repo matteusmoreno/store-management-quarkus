@@ -2,14 +2,12 @@ package br.com.matteusmoreno.controller;
 
 import br.com.matteusmoreno.domain.ServiceOrder;
 import br.com.matteusmoreno.request.CreateServiceOrderRequest;
+import br.com.matteusmoreno.request.UpdateServiceOrderRequest;
 import br.com.matteusmoreno.response.ServiceOrderDetailsResponse;
 import br.com.matteusmoreno.service.ServiceOrderService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
@@ -33,6 +31,38 @@ public class ServiceOrderController {
     @Path("/details/{id}")
     public Response detailsById(@PathParam("id") UUID id) {
         ServiceOrder serviceOrder = serviceOrderService.serviceOrderDetails(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PUT
+    @Path("/update")
+    public Response update(@RequestBody @Valid UpdateServiceOrderRequest request) {
+        ServiceOrder serviceOrder = serviceOrderService.updateServiceOrder(request);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("/start-service/{id}")
+    public Response start(@PathParam("id") UUID id) {
+        ServiceOrder serviceOrder = serviceOrderService.startService(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("/complete-service/{id}")
+    public Response complete(@PathParam("id") UUID id) {
+        ServiceOrder serviceOrder = serviceOrderService.completeService(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("/cancel-service/{id}")
+    public Response cancel(@PathParam("id") UUID id) {
+        ServiceOrder serviceOrder = serviceOrderService.cancelService(id);
 
         return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
     }
