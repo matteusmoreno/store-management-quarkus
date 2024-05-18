@@ -1,7 +1,7 @@
 package br.com.matteusmoreno.utils;
 
-import br.com.matteusmoreno.client.ViaCepClient;
-import br.com.matteusmoreno.client.ViaCepResponse;
+import br.com.matteusmoreno.client.viacep.ViaCepClient;
+import br.com.matteusmoreno.client.viacep.ViaCepResponse;
 import br.com.matteusmoreno.domain.Address;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;

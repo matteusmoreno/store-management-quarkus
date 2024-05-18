@@ -24,20 +24,20 @@ import java.util.UUID;
 @ApplicationScoped
 public class ServiceOrderService {
 
-    @Inject
-    ServiceOrderRepository serviceOrderRepository;
+    private final ServiceOrderRepository serviceOrderRepository;
+    private final CustomerRepository customerRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ProductRepository productRepository;
+    private final AppUtils appUtils;
 
     @Inject
-    CustomerRepository customerRepository;
-
-    @Inject
-    EmployeeRepository employeeRepository;
-
-    @Inject
-    ProductRepository productRepository;
-
-    @Inject
-    AppUtils appUtils;
+    public ServiceOrderService(ServiceOrderRepository serviceOrderRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, ProductRepository productRepository, AppUtils appUtils) {
+        this.serviceOrderRepository = serviceOrderRepository;
+        this.customerRepository = customerRepository;
+        this.employeeRepository = employeeRepository;
+        this.productRepository = productRepository;
+        this.appUtils = appUtils;
+    }
 
     @Transactional
     public ServiceOrder createServiceOrder(CreateServiceOrderRequest request) {

@@ -21,6 +21,6 @@ public record CreateCustomerRequest(
         @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format. Correct format is XXX.XXX.XXX-XX")
         String cpf,
         @NotBlank
-        @Pattern(regexp = "\\d{5}-\\d{3}", message = "Invalid CEP format. Correct format is XXXXX-XXX")
+        @Pattern(regexp = "\\d{5}-\\d{3}|\\d{8}", message = "Invalid CEP format. Correct formats are XXXXX-XXX or XXXXXXXX")
         String zipcode) {
 }

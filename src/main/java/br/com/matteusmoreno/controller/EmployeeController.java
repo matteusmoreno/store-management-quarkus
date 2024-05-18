@@ -20,8 +20,13 @@ import java.util.UUID;
 @Path("/employees")
 public class EmployeeController {
 
+
+    private final EmployeeService employeeService;
+
     @Inject
-    EmployeeService employeeService;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @POST
     @Path("/create")

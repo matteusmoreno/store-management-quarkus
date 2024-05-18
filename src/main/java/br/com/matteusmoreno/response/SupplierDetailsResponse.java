@@ -8,11 +8,13 @@ import java.util.UUID;
 
 public record SupplierDetailsResponse(
         UUID id,
-        String name,
+        String corporateName,
+        String tradeName,
         String cnpj,
         String phone,
+        String registrationStatus,
         String email,
-        String site,
+        String legalNature,
         Address address,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
@@ -20,8 +22,8 @@ public record SupplierDetailsResponse(
         Boolean active) {
 
     public SupplierDetailsResponse(Supplier supplier) {
-        this(supplier.getId(), supplier.getName(), supplier.getCnpj(), supplier.getPhone(),
-                supplier.getEmail(), supplier.getSite(), supplier.getAddress(), supplier.getCreatedAt(),
-                supplier.getUpdatedAt(), supplier.getDeletedAt(), supplier.getActive());
+        this(supplier.getId(), supplier.getCorporateName(), supplier.getTradeName(), supplier.getCnpj(), supplier.getPhone(),
+                supplier.getRegistrationStatus(), supplier.getEmail(), supplier.getLegalNature(), supplier.getAddress(),
+                supplier.getCreatedAt(), supplier.getUpdatedAt(), supplier.getDeletedAt(), supplier.getActive());
     }
 }

@@ -13,8 +13,12 @@ import java.time.LocalDateTime;
 @ApplicationScoped
 public class ProductService {
 
+    private final ProductRepository productRepository;
+
     @Inject
-    ProductRepository productRepository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Transactional
     public Product createProduct(CreateProductRequest request) {

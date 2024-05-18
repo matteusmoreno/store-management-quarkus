@@ -17,11 +17,14 @@ import java.util.UUID;
 @ApplicationScoped
 public class CustomerService {
 
-    @Inject
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
+    private final AppUtils appUtils;
 
     @Inject
-    AppUtils appUtils;
+    public CustomerService(CustomerRepository customerRepository, AppUtils appUtils) {
+        this.customerRepository = customerRepository;
+        this.appUtils = appUtils;
+    }
 
     @Transactional
     public Customer createCustomer(CreateCustomerRequest request) {

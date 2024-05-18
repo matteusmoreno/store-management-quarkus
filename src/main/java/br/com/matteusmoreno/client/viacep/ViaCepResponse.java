@@ -1,4 +1,4 @@
-package br.com.matteusmoreno.client;
+package br.com.matteusmoreno.client.viacep;
 
 public record ViaCepResponse(
         String cep,

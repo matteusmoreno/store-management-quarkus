@@ -8,6 +8,7 @@ import br.com.matteusmoreno.service.ProductService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
@@ -18,12 +19,16 @@ import java.net.URI;
 @Path("/products")
 public class ProductController {
 
+    private final ProductService productService;
+
     @Inject
-    ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @POST
     @Path("/create")
-    public Response create(@RequestBody @Valid CreateProductRequest request, UriInfo uriInfo) {
+    public Response create(@RequestBody @Valid CreateProductRequest request, @Context UriInfo uriInfo) {
         Product product = productService.createProduct(request);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(product.getId().toString());

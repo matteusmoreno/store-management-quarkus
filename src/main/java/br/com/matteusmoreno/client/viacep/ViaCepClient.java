@@ -1,4 +1,4 @@
-package br.com.matteusmoreno.client;
+package br.com.matteusmoreno.client.viacep;
 
 import jakarta.enterprise.inject.Default;
 import jakarta.ws.rs.GET;

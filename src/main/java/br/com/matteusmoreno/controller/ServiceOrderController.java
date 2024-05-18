@@ -8,23 +8,34 @@ import br.com.matteusmoreno.service.ServiceOrderService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import java.net.URI;
 import java.util.UUID;
 
 @Path("/service_orders")
 public class ServiceOrderController {
 
+    private final ServiceOrderService serviceOrderService;
+
     @Inject
-    ServiceOrderService serviceOrderService;
+    public ServiceOrderController(ServiceOrderService serviceOrderService) {
+        this.serviceOrderService = serviceOrderService;
+    }
 
     @POST
     @Path("/create")
-    public Response create(@RequestBody @Valid CreateServiceOrderRequest request) {
+    public Response create(@RequestBody @Valid CreateServiceOrderRequest request, @Context UriInfo uriInfo) {
         ServiceOrder serviceOrder = serviceOrderService.createServiceOrder(request);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(serviceOrder.getId().toString());
+        URI uri = uriBuilder.build();
+
+        return Response.created(uri).entity(new ServiceOrderDetailsResponse(serviceOrder)).build();
     }
 
     @GET

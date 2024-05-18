@@ -8,6 +8,7 @@ import br.com.matteusmoreno.service.SupplierService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
@@ -19,15 +20,18 @@ import java.util.UUID;
 @Path("/suppliers")
 public class SupplierController {
 
+    private final SupplierService supplierService;
+
     @Inject
-    SupplierService supplierService;
+    public SupplierController(SupplierService supplierService) {
+        this.supplierService = supplierService;
+    }
 
     @POST
     @Path("/create")
-    public Response create(@RequestBody @Valid CreateSupplierRequest request, UriInfo uriInfo) {
+    public Response create(@RequestBody @Valid CreateSupplierRequest request, @Context UriInfo uriInfo) {
         Supplier supplier = supplierService.createSupplier(request);
 
-        // Construa a URI para o recurso criado usando UriBuilder
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(supplier.getId().toString());
         URI uri = uriBuilder.build();
 

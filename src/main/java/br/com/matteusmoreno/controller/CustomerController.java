@@ -13,9 +13,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.UUID;
@@ -23,8 +20,12 @@ import java.util.UUID;
 @Path("/customers")
 public class CustomerController {
 
+    private final CustomerService customerService;
+
     @Inject
-    CustomerService customerService;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
 
     @POST
@@ -32,7 +33,6 @@ public class CustomerController {
     public Response createCustomer(@RequestBody @Valid CreateCustomerRequest request, @Context UriInfo uriInfo) {
         Customer customer = customerService.createCustomer(request);
 
-        // Construa a URI para o recurso criado usando UriBuilder
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(customer.getId().toString());
         URI uri = uriBuilder.build();
 

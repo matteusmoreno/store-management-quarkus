@@ -26,6 +26,7 @@ public class Product {
     @Column(name = "sale_price")
     private BigDecimal salePrice;
     private String manufacturer;
+    private Integer quantity;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
@@ -40,6 +41,7 @@ public class Product {
         this.purchasePrice = request.purchasePrice();
         this.salePrice = request.salePrice();
         this.manufacturer = request.manufacturer();
+        this.quantity = request.quantity();
         this.createdAt = LocalDateTime.now();
         this.active = true;
     }

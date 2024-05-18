@@ -1,7 +1,5 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Employee;
 import br.com.matteusmoreno.domain.Supplier;
 import br.com.matteusmoreno.repository.SupplierRepository;
 import br.com.matteusmoreno.request.CreateSupplierRequest;
@@ -17,18 +15,18 @@ import java.util.UUID;
 @ApplicationScoped
 public class SupplierService {
 
-    @Inject
-    SupplierRepository supplierRepository;
+    private final SupplierRepository supplierRepository;
+    private final AppUtils appUtils;
 
     @Inject
-    AppUtils appUtils;
+    public SupplierService(SupplierRepository supplierRepository, AppUtils appUtils) {
+        this.supplierRepository = supplierRepository;
+        this.appUtils = appUtils;
+    }
 
     @Transactional
     public Supplier createSupplier(CreateSupplierRequest request) {
-        Address address = appUtils.setAddressAttributes(request.zipcode());
-
-        Supplier supplier = new Supplier(request);
-        supplier.setAddress(address);
+        Supplier supplier = appUtils.setSupplierAttributes(request.cnpj());
 
         supplierRepository.save(supplier);
 
@@ -43,20 +41,14 @@ public class SupplierService {
     public Supplier updateSupplier(UpdateSupplierRequest request) {
         Supplier supplier = supplierRepository.findById(request.id()).orElseThrow();
 
-        if (request.name() != null) {
-            supplier.setName(request.name());
-        }
-        if (request.cnpj() != null) {
-            supplier.setCnpj(request.cnpj());
+        if (request.tradeName() != null) {
+            supplier.setTradeName(request.tradeName());
         }
         if (request.phone() != null) {
             supplier.setPhone(request.phone());
         }
         if (request.email() != null) {
             supplier.setEmail(request.email());
-        }
-        if (request.site() != null) {
-            supplier.setSite(request.site());
         }
         if (request.zipcode() != null) {
             supplier.setAddress(appUtils.setAddressAttributes(request.zipcode()));

@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.domain;
 
-import br.com.matteusmoreno.request.CreateSupplierRequest;
+import br.com.matteusmoreno.client.brasil_api.BrasilApiResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,11 +19,17 @@ public class Supplier {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String name;
+    @Column(name = "corporate_name")
+    private String corporateName;
+    @Column(name = "trade_name")
+    private String tradeName;
     private String cnpj;
     private String phone;
+    @Column(name = "registration_status")
+    private String registrationStatus;
     private String email;
-    private String site;
+    @Column(name = "legal_nature")
+    private String legalNature;
     @ManyToOne(cascade = CascadeType.ALL)
     private Address address;
     @Column(name = "created_at")
@@ -34,12 +40,13 @@ public class Supplier {
     private LocalDateTime deletedAt;
     private Boolean active;
 
-    public Supplier(CreateSupplierRequest request) {
-        this.name = request.name();
-        this.cnpj = request.cnpj();
-        this.phone = request.phone();
-        this.email = request.email();
-        this.site = request.site();
+    public Supplier(BrasilApiResponse response) {
+        this.corporateName = response.razao_social();
+        this.tradeName = response.nome_fantasia();
+        this.phone = response.ddd_telefone_1();
+        this.registrationStatus = response.descricao_situacao_cadastral();
+        this.email = response.email();
+        this.legalNature = response.natureza_juridica();
         this.createdAt = LocalDateTime.now();
         this.active = true;
     }

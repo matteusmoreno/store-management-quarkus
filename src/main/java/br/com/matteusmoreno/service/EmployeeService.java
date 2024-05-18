@@ -16,11 +16,15 @@ import java.util.UUID;
 @ApplicationScoped
 public class EmployeeService {
 
-    @Inject
-    EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final AppUtils appUtils;
 
     @Inject
-    AppUtils appUtils;
+    public EmployeeService(EmployeeRepository employeeRepository, AppUtils appUtils) {
+        this.employeeRepository = employeeRepository;
+        this.appUtils = appUtils;
+    }
+
 
     @Transactional
     public Employee createEmployee(CreateEmployeeRequest request) {

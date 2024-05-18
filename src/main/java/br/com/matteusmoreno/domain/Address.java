@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.domain;
 
-import br.com.matteusmoreno.client.ViaCepResponse;
+import br.com.matteusmoreno.client.viacep.ViaCepResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,11 +21,11 @@ public class Address {
     private String neighborhood;
     private String state;
 
-    public Address(ViaCepResponse viaCepResponse) {
-        this.zipcode = viaCepResponse.cep();
-        this.street = viaCepResponse.logradouro();
-        this.city = viaCepResponse.localidade();
-        this.neighborhood = viaCepResponse.bairro();
-        this.state = viaCepResponse.uf();
+    public Address(ViaCepResponse response) {
+        this.zipcode = response.cep();
+        this.street = response.logradouro();
+        this.city = response.localidade();
+        this.neighborhood = response.bairro();
+        this.state = response.uf();
     }
 }

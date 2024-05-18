@@ -1,9 +1,12 @@
 package br.com.matteusmoreno.utils;
 
-import br.com.matteusmoreno.client.ViaCepClient;
-import br.com.matteusmoreno.client.ViaCepResponse;
+import br.com.matteusmoreno.client.brasil_api.BrasilApiClient;
+import br.com.matteusmoreno.client.brasil_api.BrasilApiResponse;
+import br.com.matteusmoreno.client.viacep.ViaCepClient;
+import br.com.matteusmoreno.client.viacep.ViaCepResponse;
 import br.com.matteusmoreno.domain.Address;
 import br.com.matteusmoreno.domain.Product;
+import br.com.matteusmoreno.domain.Supplier;
 import br.com.matteusmoreno.repository.AddressRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,11 +19,16 @@ import java.util.List;
 @ApplicationScoped
 public class AppUtils {
 
-    @Inject
-    AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
+    private final ViaCepClient viaCepClient;
+    private final BrasilApiClient brasilApiClient;
 
     @Inject
-    ViaCepClient viaCepClient;
+    public AppUtils(AddressRepository addressRepository, ViaCepClient viaCepClient, BrasilApiClient brasilApiClient) {
+        this.addressRepository = addressRepository;
+        this.viaCepClient = viaCepClient;
+        this.brasilApiClient = brasilApiClient;
+    }
 
     public Address setAddressAttributes(String zipcode) {
         boolean addressExists = addressRepository.existsByZipcode(zipcode);
@@ -30,6 +38,18 @@ public class AppUtils {
 
         ViaCepResponse viaCepResponse = viaCepClient.getAddress(zipcode);
         return new Address(viaCepResponse);
+    }
+
+    public Supplier setSupplierAttributes(String cnpj) {
+        String formattedCnpj = cnpj.replace("-", "").replace("/", "");
+        BrasilApiResponse brasilApiResponse = brasilApiClient.getSupplier(formattedCnpj);
+        Address supplierAddress = setAddressAttributes(brasilApiResponse.cep());
+
+        Supplier supplier = new Supplier(brasilApiResponse);
+        supplier.setCnpj(cnpj);
+        supplier.setAddress(supplierAddress);
+
+        return supplier;
     }
 
     public Integer ageCalculator(LocalDate birtDate) {
