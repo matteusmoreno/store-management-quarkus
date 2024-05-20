@@ -95,6 +95,8 @@ public class CustomerService {
         customer.setDeletedAt(null);
         customer.setUpdatedAt(LocalDateTime.now());
 
+        customerRepository.save(customer);
+
         return customer;
     }
 

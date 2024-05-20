@@ -4,7 +4,8 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    command:
+      - --default-authentication-plugin=caching_sha2_password
     restart: unless-stopped
     env_file:
       - env/mysql.env

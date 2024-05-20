@@ -24,7 +24,7 @@ class AppUtilsTest {
 
 
     @Test
-    public void testSetAddressAttributes() {
+    void testSetAddressAttributes() {
         ViaCepResponse mockResponse = new ViaCepResponse("28994-675", "Rua Alfredo Menezes", "Saquarema",
                 "Bacaxá (Bacaxá)", "RJ");
         when(viaCepClient.getAddress("28994-675")).thenReturn(mockResponse);
@@ -42,7 +42,6 @@ class AppUtilsTest {
     void ageCalculator() {
 
         LocalDate birthDate = LocalDate.of(1990, 5, 14);
-
         assertEquals(34, appUtils.ageCalculator(birthDate));
     }
 

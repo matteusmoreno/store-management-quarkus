@@ -10,4 +10,5 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
 
     List<Customer>findByAddressNeighborhoodContainingIgnoreCase(String neighborhood);
 
+    boolean existsByEmail(String email);
 }
