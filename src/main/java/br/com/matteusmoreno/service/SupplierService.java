@@ -76,6 +76,8 @@ public class SupplierService {
         supplier.setDeletedAt(null);
         supplier.setUpdatedAt(LocalDateTime.now());
 
+        supplierRepository.save(supplier);
+
         return supplier;
     }
 }

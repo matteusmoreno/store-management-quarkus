@@ -140,7 +140,7 @@ class CustomerServiceTest {
     @Test
     @DisplayName("Should disable a customer and mark them as deleted")
     void shouldDisableCustomerAndMarkAsDeleted() {
-        when(customerRepository.findById(any())).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(uuid)).thenReturn(Optional.of(customer));
 
         customerService.disableCustomer(customer.getId());
 
