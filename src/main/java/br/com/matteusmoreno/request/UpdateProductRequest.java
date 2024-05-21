@@ -11,5 +11,6 @@ public record UpdateProductRequest(
         String description,
         BigDecimal purchasePrice,
         BigDecimal salePrice,
-        String manufacturer) {
+        String manufacturer,
+        Integer quantity) {
 }

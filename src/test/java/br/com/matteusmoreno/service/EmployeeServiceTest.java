@@ -119,6 +119,7 @@ class EmployeeServiceTest {
         verify(appUtils, times(1)).setAddressAttributes(request.zipcode());
         verify(appUtils, times(1)).ageCalculator(request.birthDate());
 
+        assertEquals(request.id(), result.getId());
         assertEquals(request.name(), result.getName());
         assertEquals(request.birthDate(), result.getBirthDate());
         assertEquals(34, result.getAge());
@@ -144,6 +145,7 @@ class EmployeeServiceTest {
 
         verify(employeeRepository, times(1)).findById(uuid);
         verify(employeeRepository, times(1)).save(employee);
+
         assertFalse(employee.getActive());
         assertNotNull(employee.getDeletedAt());
     }
@@ -159,8 +161,8 @@ class EmployeeServiceTest {
         verify(employeeRepository, times(1)).findById(uuid);
         verify(employeeRepository, times(1)).save(result);
 
-        assertTrue(employee.getActive());
-        assertNull(employee.getDeletedAt());
-        assertNotNull(employee.getUpdatedAt());
+        assertTrue(result.getActive());
+        assertNull(result.getDeletedAt());
+        assertNotNull(result.getUpdatedAt());
     }
 }

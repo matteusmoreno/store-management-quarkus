@@ -58,24 +58,24 @@ class CustomerServiceTest {
         when(appUtils.setAddressAttributes(request.zipcode())).thenReturn(address);
         when(appUtils.ageCalculator(any())).thenReturn(34);
 
-        Customer createdCostumer = customerService.createCustomer(request);
-        createdCostumer.setId(uuid);
+        Customer result = customerService.createCustomer(request);
+        result.setId(uuid);
 
         verify(appUtils, times(1)).setAddressAttributes(any());
         verify(appUtils, times(1)).ageCalculator(any());
-        verify(customerRepository, times(1)).save(createdCostumer);
+        verify(customerRepository, times(1)).save(result);
 
-        assertEquals(uuid, createdCostumer.getId());
-        assertEquals("Name", createdCostumer.getName());
-        assertEquals(LocalDate.of(1990, 8, 28), createdCostumer.getBirthDate());
-        assertEquals(34, createdCostumer.getAge());
-        assertEquals("matteus@email.com", createdCostumer.getEmail());
-        assertEquals("(22)998223307", createdCostumer.getPhone());
-        assertEquals("222.222.222-22", createdCostumer.getCpf());
-        assertEquals(address, createdCostumer.getAddress());
-        assertNotNull(createdCostumer.getCreatedAt());
-        assertNull(createdCostumer.getDeletedAt());
-        assertTrue(createdCostumer.getActive());
+        assertEquals(uuid, result.getId());
+        assertEquals("Name", result.getName());
+        assertEquals(LocalDate.of(1990, 8, 28), result.getBirthDate());
+        assertEquals(34, result.getAge());
+        assertEquals("matteus@email.com", result.getEmail());
+        assertEquals("(22)998223307", result.getPhone());
+        assertEquals("222.222.222-22", result.getCpf());
+        assertEquals(address, result.getAddress());
+        assertNotNull(result.getCreatedAt());
+        assertNull(result.getDeletedAt());
+        assertTrue(result.getActive());
     }
 
     @Test
@@ -123,6 +123,7 @@ class CustomerServiceTest {
         verify(appUtils, times(1)).ageCalculator(request.birthDate());
         verify(appUtils, times(1)).setAddressAttributes(request.zipcode());
 
+        assertEquals(request.id(), result.getId());
         assertEquals(request.name(), result.getName());
         assertEquals(request.birthDate(), result.getBirthDate());
         assertEquals(34, result.getAge());
@@ -157,8 +158,8 @@ class CustomerServiceTest {
 
         verify(customerRepository, times(1)).findById(uuid);
         verify(customerRepository, times(1)).save(result);
-        assertTrue(customer.getActive());
-        assertNull(customer.getDeletedAt());
-        assertNotNull(customer.getUpdatedAt());
+        assertTrue(result.getActive());
+        assertNull(result.getDeletedAt());
+        assertNotNull(result.getUpdatedAt());
     }
 }

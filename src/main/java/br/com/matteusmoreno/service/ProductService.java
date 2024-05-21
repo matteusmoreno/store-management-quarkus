@@ -52,6 +52,9 @@ public class ProductService {
         if (request.manufacturer() != null) {
             product.setManufacturer(request.manufacturer());
         }
+        if (request.quantity() != null) {
+            product.setQuantity(request.quantity());
+        }
 
         product.setUpdatedAt(LocalDateTime.now());
         productRepository.save(product);
@@ -74,6 +77,8 @@ public class ProductService {
         product.setActive(true);
         product.setDeletedAt(null);
         product.setUpdatedAt(LocalDateTime.now());
+
+        productRepository.save(product);
 
         return product;
     }
