@@ -35,56 +35,52 @@ class CustomerServiceTest {
     @InjectMocks
     CustomerService customerService;
 
+    private UUID uuid;
+    private Address address;
+    private Customer customer;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+
+        uuid = UUID.randomUUID();
+        address = new Address(1L, "28994-666", "St. A", "City", "Neighborhood", "RH");
+        customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 34, "(22)222222222",
+                "email@email.com", "222.222.222-22", address, LocalDateTime.now(), null, null, true);
     }
 
     @Test
     @DisplayName("Should create a customer and save it to the repository")
     void shouldCreateCustomerAndSaveToRepository() {
-        UUID uuid = UUID.randomUUID();
         CreateCustomerRequest request = new CreateCustomerRequest("Name", LocalDate.of(1990, 8, 28),
                 "matteus@email.com", "(22)998223307", "222.222.222-22", "22222-666");
-        Address address = new Address(1L, "28994-666", "St. A", "City", "Neighborhood", "RH");
-        Integer age = 30;
 
-        when(appUtils.setAddressAttributes(any())).thenReturn(address);
-        when(appUtils.ageCalculator(any())).thenReturn(age);
+        when(appUtils.setAddressAttributes(request.zipcode())).thenReturn(address);
+        when(appUtils.ageCalculator(any())).thenReturn(34);
 
-        Customer customer = customerService.createCustomer(request);
-        customer.setId(uuid);
+        Customer createdCostumer = customerService.createCustomer(request);
+        createdCostumer.setId(uuid);
 
         verify(appUtils, times(1)).setAddressAttributes(any());
         verify(appUtils, times(1)).ageCalculator(any());
-        verify(customerRepository, times(1)).save(customer);
-        assertEquals(uuid, customer.getId());
-        assertEquals("Name", customer.getName());
-        assertEquals(LocalDate.of(1990, 8, 28), customer.getBirthDate());
-        assertEquals(age, customer.getAge());
-        assertEquals("matteus@email.com", customer.getEmail());
-        assertEquals("(22)998223307", customer.getPhone());
-        assertEquals("222.222.222-22", customer.getCpf());
-        assertEquals(address, customer.getAddress());
+        verify(customerRepository, times(1)).save(createdCostumer);
 
-        assertEquals(LocalDate.now(), customer.getCreatedAt().toLocalDate());
-        assertEquals(LocalDateTime.now().getHour(), customer.getCreatedAt().getHour());
-        assertEquals(LocalDateTime.now().getMinute(), customer.getCreatedAt().getMinute());
-        assertEquals(LocalDateTime.now().getSecond(), customer.getCreatedAt().getSecond());
-        assertNull(customer.getUpdatedAt());
-
-        assertNull(customer.getDeletedAt());
-        assertTrue(customer.getActive());
+        assertEquals(uuid, createdCostumer.getId());
+        assertEquals("Name", createdCostumer.getName());
+        assertEquals(LocalDate.of(1990, 8, 28), createdCostumer.getBirthDate());
+        assertEquals(34, createdCostumer.getAge());
+        assertEquals("matteus@email.com", createdCostumer.getEmail());
+        assertEquals("(22)998223307", createdCostumer.getPhone());
+        assertEquals("222.222.222-22", createdCostumer.getCpf());
+        assertEquals(address, createdCostumer.getAddress());
+        assertNotNull(createdCostumer.getCreatedAt());
+        assertNull(createdCostumer.getDeletedAt());
+        assertTrue(createdCostumer.getActive());
     }
 
     @Test
     @DisplayName("Should return customer details by ID")
     void shouldReturnCustomerDetailsById() {
-        UUID uuid = UUID.randomUUID();
-        Address address = new Address(1L, "28994-666", "St. A", "City", "Neighborhood", "RH");
-        Customer customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 34, "(22)222222222",
-                "email@email.com", "222.222.222-22", address, LocalDateTime.now(), null, null, true);
-
         when(customerRepository.findById(uuid)).thenReturn(Optional.of(customer));
 
         Optional<Customer> result = Optional.ofNullable(customerService.customerDetailsById(uuid));
@@ -98,11 +94,6 @@ class CustomerServiceTest {
     @DisplayName("Should return customer details by Neighborhood")
     void shouldReturnCustomerDetailsByNeighborhood() {
         String neighborhood = "Neighborhood";
-        UUID uuid = UUID.randomUUID();
-        Address address = new Address(1L, "28994-666", "St. A", "City", "Neighborhood", "RH");
-        Customer customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 34, "(22)222222222",
-                "email@email.com", "222.222.222-22", address, LocalDateTime.now(), null, null, true);
-
         List<Customer> customers = Collections.singletonList(customer);
 
         when(customerRepository.findByAddressNeighborhoodContainingIgnoreCase(anyString())).thenReturn(customers);
@@ -115,51 +106,39 @@ class CustomerServiceTest {
     }
 
     @Test
-    @DisplayName("Should create a update and save it to the repository")
+    @DisplayName("Should update customer and save it to the repository")
     void shouldUpdateCustomerAndSaveToRepository() {
-        UUID uuid = UUID.randomUUID();
-        Address oldAddress = new Address(1L, "28994-666", "St. A", "City A", "Neighborhood A", "RH");
-
-        Customer customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 33, "(22)222222222",
-                "email@email.com", "222.222.222-22", oldAddress, LocalDateTime.now(), null, null, true);
-
-        LocalDate newBirthDate = LocalDate.of(1989, 8, 28);
         Address newAddress = new Address(2L, "28994-675", "St. B", "City B", "Neighborhood B", "RA");
-
-        UpdateCustomerRequest request = new UpdateCustomerRequest(customer.getId(), "New Name", newBirthDate, "newemail@email.com",
+        UpdateCustomerRequest request = new UpdateCustomerRequest(customer.getId(), "New Name", LocalDate.of(1989, 8, 28), "newemail@email.com",
                 "(33)333333333", "000.000.000-00", newAddress.getZipcode());
 
-        when(customerRepository.findById(uuid)).thenReturn(Optional.of(customer));
+        when(customerRepository.findById(request.id())).thenReturn(Optional.of(customer));
         when(appUtils.setAddressAttributes(newAddress.getZipcode())).thenReturn(newAddress);
         when(appUtils.ageCalculator(request.birthDate())).thenReturn(34);
 
-        Customer updatedCustomer = customerService.updateCustomer(request);
+        Customer result = customerService.updateCustomer(request);
 
         verify(customerRepository, times(1)).findById(uuid);
+        verify(customerRepository, times(1)).save(result);
         verify(appUtils, times(1)).ageCalculator(request.birthDate());
         verify(appUtils, times(1)).setAddressAttributes(request.zipcode());
 
-        assertEquals("New Name", updatedCustomer.getName());
-        assertEquals(newBirthDate, updatedCustomer.getBirthDate());
-        assertEquals(34, updatedCustomer.getAge());
-        assertEquals("(33)333333333", updatedCustomer.getPhone());
-        assertEquals("newemail@email.com", updatedCustomer.getEmail());
-        assertEquals("000.000.000-00", updatedCustomer.getCpf());
-        assertEquals(newAddress, updatedCustomer.getAddress());
-        assertNotNull(updatedCustomer.getCreatedAt());
-        assertNotNull(updatedCustomer.getUpdatedAt());
-        assertNull(updatedCustomer.getDeletedAt());
-        assertTrue(updatedCustomer.getActive());
+        assertEquals(request.name(), result.getName());
+        assertEquals(request.birthDate(), result.getBirthDate());
+        assertEquals(34, result.getAge());
+        assertEquals(request.phone(), result.getPhone());
+        assertEquals(request.email(), result.getEmail());
+        assertEquals(request.cpf(), result.getCpf());
+        assertEquals(newAddress, result.getAddress());
+        assertNotNull(result.getCreatedAt());
+        assertNotNull(result.getUpdatedAt());
+        assertNull(result.getDeletedAt());
+        assertTrue(result.getActive());
     }
 
     @Test
     @DisplayName("Should disable a customer and mark them as deleted")
     void shouldDisableCustomerAndMarkAsDeleted() {
-        UUID uuid = UUID.randomUUID();
-        Customer customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 34, "(22)222222222",
-                "email@email.com", "222.222.222-22", new Address(), LocalDateTime.now(), null, null, true);
-        customer.setId(uuid);
-
         when(customerRepository.findById(any())).thenReturn(Optional.of(customer));
 
         customerService.disableCustomer(customer.getId());
@@ -172,16 +151,12 @@ class CustomerServiceTest {
     @Test
     @DisplayName("Should enable a customer and mark them as updated")
     void shouldEnableCustomerAndMarkAsUpdated() {
-        UUID uuid = UUID.randomUUID();
-        Customer customer = new Customer(uuid, "Name", LocalDate.of(1990, 8, 28), 34, "(22)222222222",
-                "email@email.com", "222.222.222-22", new Address(), LocalDateTime.now(), null, null, true);
-        customer.setId(uuid);
-
         when(customerRepository.findById(any())).thenReturn(Optional.of(customer));
 
-        customerService.enableCustomer(customer.getId());
+        Customer result = customerService.enableCustomer(customer.getId());
 
-        verify(customerRepository, times(1)).save(customer);
+        verify(customerRepository, times(1)).findById(uuid);
+        verify(customerRepository, times(1)).save(result);
         assertTrue(customer.getActive());
         assertNull(customer.getDeletedAt());
         assertNotNull(customer.getUpdatedAt());

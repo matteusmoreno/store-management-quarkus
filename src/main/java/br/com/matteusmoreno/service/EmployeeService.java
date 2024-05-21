@@ -94,6 +94,8 @@ public class EmployeeService {
         employee.setDeletedAt(null);
         employee.setUpdatedAt(LocalDateTime.now());
 
+        employeeRepository.save(employee);
+
         return employee;
     }
 }
