@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.domain;
 
-import br.com.matteusmoreno.constant.Role;
+import br.com.matteusmoreno.constant.EmployeeRole;
 import br.com.matteusmoreno.request.CreateEmployeeRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class Employee {
     private String phone;
     private BigDecimal salary;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private EmployeeRole role;
     private String email;
     private String cpf;
     @ManyToOne(cascade = CascadeType.ALL)

@@ -1,9 +1,11 @@
 package br.com.matteusmoreno.service;
 
 import br.com.matteusmoreno.domain.Address;
+import br.com.matteusmoreno.domain.Customer;
 import br.com.matteusmoreno.domain.Supplier;
 import br.com.matteusmoreno.repository.SupplierRepository;
 import br.com.matteusmoreno.request.CreateSupplierRequest;
+import br.com.matteusmoreno.request.UpdateCustomerRequest;
 import br.com.matteusmoreno.request.UpdateSupplierRequest;
 import br.com.matteusmoreno.utils.AppUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -88,6 +92,18 @@ class SupplierServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw NoSuchElementException when supplier ID not found")
+    void shouldThrowNoSuchElementExceptionWhenSupplierIdNotFound() {
+        when(supplierRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            supplierService.supplierDetails(uuid);
+        });
+
+        verify(supplierRepository, times(1)).findById(uuid);
+    }
+
+    @Test
     @DisplayName("Should update supplier and save it to the repository")
     void shouldUpdateSupplierAndSaveToRepository() {
         Address newAddress = new Address(2L, "28994-675", "St. B", "City B", "Neighborhood B", "RA");
@@ -115,6 +131,25 @@ class SupplierServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw NoSuchElementException when updating a supplier that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenUpdatingNonExistentSupplier() {
+        Address newAddress = new Address(2L, "28994-675", "St. B", "City B", "Neighborhood B", "RA");
+        UpdateSupplierRequest request = new UpdateSupplierRequest(supplier.getId(), "New Name", "(22)996587456",
+                "newemail@email.com", newAddress.getZipcode());
+
+        when(supplierRepository.findById(request.id())).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            supplierService.updateSupplier(request);
+        });
+
+        verify(supplierRepository, times(1)).findById(request.id());
+        verify(supplierRepository, times(0)).save(any(Supplier.class));
+        verify(appUtils, times(0)).ageCalculator(any(LocalDate.class));
+        verify(appUtils, times(0)).setAddressAttributes(anyString());
+    }
+
+    @Test
     @DisplayName("Should disable a supplier and mark them as deleted")
     void shouldDisableSupplierAndMarkAsDeleted() {
         when(supplierRepository.findById(any())).thenReturn(Optional.of(supplier));
@@ -124,6 +159,19 @@ class SupplierServiceTest {
         verify(supplierRepository, times(1)).save(supplier);
         assertFalse(supplier.getActive());
         assertNotNull(supplier.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should throw NoSuchElementException when disabling a supplier that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenDisablingNonExistentSupplier() {
+        when(supplierRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            supplierService.disableSupplier(uuid);
+        });
+
+        verify(supplierRepository, times(1)).findById(uuid);
+        verify(supplierRepository, times(0)).save(any(Supplier.class));
     }
 
     @Test
@@ -138,5 +186,18 @@ class SupplierServiceTest {
         assertTrue(result.getActive());
         assertNull(result.getDeletedAt());
         assertNotNull(result.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("Should throw NoSuchElementException when enabling a supplier that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenEnablingNonExistentSupplier() {
+        when(supplierRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            supplierService.enableSupplier(uuid);
+        });
+
+        verify(supplierRepository, times(1)).findById(uuid);
+        verify(supplierRepository, times(0)).save(any(Supplier.class));
     }
 }

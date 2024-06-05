@@ -6,6 +6,10 @@ import br.com.matteusmoreno.repository.CustomerRepository;
 import br.com.matteusmoreno.request.CreateCustomerRequest;
 import br.com.matteusmoreno.request.UpdateCustomerRequest;
 import br.com.matteusmoreno.utils.AppUtils;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,10 +39,14 @@ class CustomerServiceTest {
     private UUID uuid;
     private Address address;
     private Customer customer;
+    private Validator validator;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
 
         uuid = UUID.randomUUID();
         address = new Address(1L, "28994-666", "St. A", "City", "Neighborhood", "RH");
@@ -79,6 +84,60 @@ class CustomerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw ConstraintViolationException when creating a customer with invalid fields")
+    void shouldThrowConstraintViolationExceptionWhenCreatingCustomerWithInvalidFields() {
+        // Teste para nome em branco
+        CreateCustomerRequest requestWithBlankName = new CreateCustomerRequest("", LocalDate.of(1990, 8, 28),
+                "matteus@email.com", "(22)998223307", "222.222.222-22", "22222-666");
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            validator.validate(requestWithBlankName).forEach(violation -> {
+                throw new ConstraintViolationException(violation.getMessage(), Set.of(violation));
+            });
+        });
+
+        // Teste para email inválido
+        CreateCustomerRequest requestWithInvalidEmail = new CreateCustomerRequest("Name", LocalDate.of(1990, 8, 28),
+                "invalid-email", "(22)998223307", "222.222.222-22", "22222-666");
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            validator.validate(requestWithInvalidEmail).forEach(violation -> {
+                throw new ConstraintViolationException(violation.getMessage(), Set.of(violation));
+            });
+        });
+
+        // Teste para telefone inválido
+        CreateCustomerRequest requestWithInvalidPhone = new CreateCustomerRequest("Name", LocalDate.of(1990, 8, 28),
+                "matteus@email.com", "998223307", "222.222.222-22", "22222-666");
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            validator.validate(requestWithInvalidPhone).forEach(violation -> {
+                throw new ConstraintViolationException(violation.getMessage(), Set.of(violation));
+            });
+        });
+
+        // Teste para CPF inválido
+        CreateCustomerRequest requestWithInvalidCpf = new CreateCustomerRequest("Name", LocalDate.of(1990, 8, 28),
+                "matteus@email.com", "(22)998223307", "222-22-22", "22222-666");
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            validator.validate(requestWithInvalidCpf).forEach(violation -> {
+                throw new ConstraintViolationException(violation.getMessage(), Set.of(violation));
+            });
+        });
+
+        // Teste para CEP inválido
+        CreateCustomerRequest requestWithInvalidCep = new CreateCustomerRequest("Name", LocalDate.of(1990, 8, 28),
+                "matteus@email.com", "(22)998223307", "222.222.222-22", "2222-666");
+
+        assertThrows(ConstraintViolationException.class, () -> {
+            validator.validate(requestWithInvalidCep).forEach(violation -> {
+                throw new ConstraintViolationException(violation.getMessage(), Set.of(violation));
+            });
+        });
+    }
+
+    @Test
     @DisplayName("Should return customer details by ID")
     void shouldReturnCustomerDetailsById() {
         when(customerRepository.findById(uuid)).thenReturn(Optional.of(customer));
@@ -89,6 +148,19 @@ class CustomerServiceTest {
         assertTrue(result.isPresent());
         assertEquals(customer, result.get());
     }
+
+    @Test
+    @DisplayName("Should throw NoSuchElementException when customer ID not found")
+    void shouldThrowNoSuchElementExceptionWhenCustomerIdNotFound() {
+        when(customerRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            customerService.customerDetailsById(uuid);
+        });
+
+        verify(customerRepository, times(1)).findById(uuid);
+    }
+
 
     @Test
     @DisplayName("Should return customer details by Neighborhood")
@@ -138,6 +210,26 @@ class CustomerServiceTest {
     }
 
     @Test
+    @DisplayName("Should throw NoSuchElementException when updating a customer that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenUpdatingNonExistentCustomer() {
+        Address newAddress = new Address(2L, "28994-675", "St. B", "City B", "Neighborhood B", "RA");
+        UpdateCustomerRequest request = new UpdateCustomerRequest(customer.getId(), "New Name", LocalDate.of(1989, 8, 28), "newemail@email.com",
+                "(33)333333333", "000.000.000-00", newAddress.getZipcode());
+
+        when(customerRepository.findById(request.id())).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            customerService.updateCustomer(request);
+        });
+
+        verify(customerRepository, times(1)).findById(request.id());
+        verify(customerRepository, times(0)).save(any(Customer.class));
+        verify(appUtils, times(0)).ageCalculator(any(LocalDate.class));
+        verify(appUtils, times(0)).setAddressAttributes(anyString());
+    }
+
+
+    @Test
     @DisplayName("Should disable a customer and mark them as deleted")
     void shouldDisableCustomerAndMarkAsDeleted() {
         when(customerRepository.findById(uuid)).thenReturn(Optional.of(customer));
@@ -147,6 +239,19 @@ class CustomerServiceTest {
         verify(customerRepository, times(1)).save(customer);
         assertFalse(customer.getActive());
         assertNotNull(customer.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should throw NoSuchElementException when disabling a customer that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenDisablingNonExistentCustomer() {
+        when(customerRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            customerService.disableCustomer(uuid);
+        });
+
+        verify(customerRepository, times(1)).findById(uuid);
+        verify(customerRepository, times(0)).save(any(Customer.class));
     }
 
     @Test
@@ -161,5 +266,18 @@ class CustomerServiceTest {
         assertTrue(result.getActive());
         assertNull(result.getDeletedAt());
         assertNotNull(result.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("Should throw NoSuchElementException when enabling a customer that does not exist")
+    void shouldThrowNoSuchElementExceptionWhenEnablingNonExistentCustomer() {
+        when(customerRepository.findById(uuid)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            customerService.enableCustomer(uuid);
+        });
+
+        verify(customerRepository, times(1)).findById(uuid);
+        verify(customerRepository, times(0)).save(any(Customer.class));
     }
 }

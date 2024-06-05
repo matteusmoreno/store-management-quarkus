@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -40,7 +41,7 @@ public class CustomerService {
     }
 
     public Customer customerDetailsById(UUID id) {
-        return customerRepository.findById(id).orElseThrow();
+        return customerRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public List<Customer> customerDetailsByNeighborhood(String neighborhood) {
@@ -50,7 +51,7 @@ public class CustomerService {
 
     @Transactional
     public Customer updateCustomer(UpdateCustomerRequest request) {
-        Customer customer = customerRepository.findById(request.id()).orElseThrow();
+        Customer customer = customerRepository.findById(request.id()).orElseThrow(NoSuchElementException::new);
 
         if (request.name() != null) {
             customer.setName(request.name());
@@ -81,7 +82,7 @@ public class CustomerService {
 
     @Transactional
     public void disableCustomer(UUID id) {
-        Customer customer = customerRepository.findById(id).orElseThrow();
+        Customer customer = customerRepository.findById(id).orElseThrow(NoSuchElementException::new);
         customer.setActive(false);
         customer.setDeletedAt(LocalDateTime.now());
 
@@ -90,7 +91,7 @@ public class CustomerService {
 
     @Transactional
     public Customer enableCustomer(UUID id) {
-        Customer customer = customerRepository.findById(id).orElseThrow();
+        Customer customer = customerRepository.findById(id).orElseThrow(NoSuchElementException::new);
         customer.setActive(true);
         customer.setDeletedAt(null);
         customer.setUpdatedAt(LocalDateTime.now());

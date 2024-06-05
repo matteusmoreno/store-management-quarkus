@@ -3,7 +3,7 @@ package br.com.matteusmoreno.constant;
 import lombok.Getter;
 
 @Getter
-public enum Role {
+public enum EmployeeRole {
     MECHANIC("Mechanic"),
     SALES_ASSOCIATE("Sales Associate"),
     STORE_MANAGER("Store Manager"),
@@ -12,7 +12,7 @@ public enum Role {
 
     private final String displayName;
 
-    Role(String displayName) {
+    EmployeeRole(String displayName) {
         this.displayName = displayName;
     }
 }

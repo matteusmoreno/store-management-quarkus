@@ -7,6 +7,8 @@ import br.com.matteusmoreno.client.viacep.ViaCepResponse;
 import br.com.matteusmoreno.domain.Address;
 import br.com.matteusmoreno.domain.Product;
 import br.com.matteusmoreno.domain.Supplier;
+import br.com.matteusmoreno.exception.InvalidCepException;
+import br.com.matteusmoreno.exception.InvalidCnpjException;
 import br.com.matteusmoreno.repository.AddressRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -37,6 +39,11 @@ public class AppUtils {
         }
 
         ViaCepResponse viaCepResponse = viaCepClient.getAddress(zipcode);
+
+        if (viaCepResponse.cep() == null) {
+            throw new InvalidCepException("Invalid CEP");
+        }
+
         return new Address(viaCepResponse);
     }
 

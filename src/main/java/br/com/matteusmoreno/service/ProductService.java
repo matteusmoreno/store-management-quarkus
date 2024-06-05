@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @ApplicationScoped
 public class ProductService {
@@ -30,12 +31,12 @@ public class ProductService {
     }
 
     public Product productDetails(Long id) {
-        return productRepository.findById(id).orElseThrow();
+        return productRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Transactional
     public Product updateProduct(UpdateProductRequest request) {
-        Product product = productRepository.findById(request.id()).orElseThrow();
+        Product product = productRepository.findById(request.id()).orElseThrow(NoSuchElementException::new);
 
         if (request.name() != null) {
             product.setName(request.name());
@@ -64,7 +65,7 @@ public class ProductService {
 
     @Transactional
     public void disableProduct(Long id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(NoSuchElementException::new);
         product.setActive(false);
         product.setDeletedAt(LocalDateTime.now());
 
@@ -73,7 +74,7 @@ public class ProductService {
 
     @Transactional
     public Product enableProduct(Long id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(NoSuchElementException::new);
         product.setActive(true);
         product.setDeletedAt(null);
         product.setUpdatedAt(LocalDateTime.now());

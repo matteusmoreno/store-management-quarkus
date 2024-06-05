@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.request;
 
-import br.com.matteusmoreno.constant.Role;
+import br.com.matteusmoreno.constant.EmployeeRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,7 +17,7 @@ public record UpdateEmployeeRequest(
         @Pattern(regexp = "\\(\\d{2}\\)\\d{9}", message = "Invalid phone number format. Correct format is (XX)XXXXXXXXX")
         String phone,
         BigDecimal salary,
-        Role role,
+        EmployeeRole role,
         @Email(message = "Invalid email format")
         String email,
         @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format. Correct format is XXX.XXX.XXX-XX")

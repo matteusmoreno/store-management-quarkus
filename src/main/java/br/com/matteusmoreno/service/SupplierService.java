@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -34,12 +35,12 @@ public class SupplierService {
     }
 
     public Supplier supplierDetails(UUID id) {
-        return supplierRepository.findById(id).orElseThrow();
+        return supplierRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Transactional
     public Supplier updateSupplier(UpdateSupplierRequest request) {
-        Supplier supplier = supplierRepository.findById(request.id()).orElseThrow();
+        Supplier supplier = supplierRepository.findById(request.id()).orElseThrow(NoSuchElementException::new);
 
         if (request.tradeName() != null) {
             supplier.setTradeName(request.tradeName());
@@ -62,7 +63,7 @@ public class SupplierService {
 
     @Transactional
     public void disableSupplier(UUID id) {
-        Supplier supplier = supplierRepository.findById(id).orElseThrow();
+        Supplier supplier = supplierRepository.findById(id).orElseThrow(NoSuchElementException::new);
         supplier.setActive(false);
         supplier.setDeletedAt(LocalDateTime.now());
 
@@ -71,7 +72,7 @@ public class SupplierService {
 
     @Transactional
     public Supplier enableSupplier(UUID id) {
-        Supplier supplier = supplierRepository.findById(id).orElseThrow();
+        Supplier supplier = supplierRepository.findById(id).orElseThrow(NoSuchElementException::new);
         supplier.setActive(true);
         supplier.setDeletedAt(null);
         supplier.setUpdatedAt(LocalDateTime.now());

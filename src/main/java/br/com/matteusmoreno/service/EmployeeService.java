@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -40,12 +41,12 @@ public class EmployeeService {
     }
 
     public Employee employeeDetails(UUID id) {
-        return employeeRepository.findById(id).orElseThrow();
+        return employeeRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Transactional
     public Employee updateEmployee(UpdateEmployeeRequest request) {
-        Employee employee = employeeRepository.findById(request.id()).orElseThrow();
+        Employee employee = employeeRepository.findById(request.id()).orElseThrow(NoSuchElementException::new);
         if (request.name() != null) {
             employee.setName(request.name());
         }
@@ -80,7 +81,7 @@ public class EmployeeService {
 
     @Transactional
     public void disableEmployee(UUID id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow();
+        Employee employee = employeeRepository.findById(id).orElseThrow(NoSuchElementException::new);
         employee.setActive(false);
         employee.setDeletedAt(LocalDateTime.now());
 
@@ -89,7 +90,7 @@ public class EmployeeService {
 
     @Transactional
     public Employee enableCustomer(UUID id) {
-        Employee employee = employeeRepository.findById(id).orElseThrow();
+        Employee employee = employeeRepository.findById(id).orElseThrow(NoSuchElementException::new);
         employee.setActive(true);
         employee.setDeletedAt(null);
         employee.setUpdatedAt(LocalDateTime.now());

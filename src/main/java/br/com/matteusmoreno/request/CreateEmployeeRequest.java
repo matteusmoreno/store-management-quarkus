@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.request;
 
-import br.com.matteusmoreno.constant.Role;
+import br.com.matteusmoreno.constant.EmployeeRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,14 +19,14 @@ public record CreateEmployeeRequest(
         String phone,
         @NotNull(message = "Salary is required")
         BigDecimal salary,
-        @NotNull(message = "Role is required")
-        Role role,
+        @NotNull(message = "Employee Role is required")
+        EmployeeRole role,
         @Email(message = "Invalid email format")
         String email,
         @NotBlank(message = "CPF is required")
         @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "Invalid CPF format. Correct format is XXX.XXX.XXX-XX")
         String cpf,
-        @NotBlank
+        @NotBlank(message = "Zipcode is required")
         @Pattern(regexp = "\\d{5}-\\d{3}|\\d{8}", message = "Invalid CEP format. Correct formats are XXXXX-XXX or XXXXXXXX")
         String zipcode) {
 }
