@@ -23,7 +23,20 @@ public class ProductService {
 
     @Transactional
     public Product createProduct(CreateProductRequest request) {
+
+        String nameUpperCase = request.name().toUpperCase();
+        String manufacturerUpperCase = request.manufacturer().toUpperCase();
+
+        if (productRepository.existsByNameIgnoreCaseAndManufacturerIgnoreCase(nameUpperCase, manufacturerUpperCase)) {
+            Product product = productRepository.findByNameIgnoreCaseAndManufacturerIgnoreCase(nameUpperCase, manufacturerUpperCase);
+            product.setQuantity(product.getQuantity() + request.quantity());
+            productRepository.save(product);
+            return product;
+        }
+
         Product product = new Product(request);
+        product.setName(nameUpperCase);
+        product.setManufacturer(manufacturerUpperCase);
 
         productRepository.save(product);
 
@@ -39,7 +52,7 @@ public class ProductService {
         Product product = productRepository.findById(request.id()).orElseThrow(NoSuchElementException::new);
 
         if (request.name() != null) {
-            product.setName(request.name());
+            product.setName(request.name().toUpperCase());
         }
         if (request.description() != null) {
             product.setDescription(request.description());
@@ -51,7 +64,7 @@ public class ProductService {
             product.setSalePrice(request.salePrice());
         }
         if (request.manufacturer() != null) {
-            product.setManufacturer(request.manufacturer());
+            product.setManufacturer(request.manufacturer().toUpperCase());
         }
         if (request.quantity() != null) {
             product.setQuantity(request.quantity());

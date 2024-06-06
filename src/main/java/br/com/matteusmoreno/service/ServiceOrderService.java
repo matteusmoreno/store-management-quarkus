@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -43,8 +44,8 @@ public class ServiceOrderService {
     public ServiceOrder createServiceOrder(CreateServiceOrderRequest request) {
         ServiceOrder serviceOrder = new ServiceOrder(request);
 
-        Customer customer = customerRepository.findById(request.customer()).orElseThrow();
-        Employee employee = employeeRepository.findById(request.employee()).orElseThrow();
+        Customer customer = customerRepository.findById(request.customer()).orElseThrow(NoSuchElementException::new);
+        Employee employee = employeeRepository.findById(request.employee()).orElseThrow(NoSuchElementException::new);
         List<Product> products = productRepository.findAllById(request.products());
         BigDecimal cost = appUtils.costCalculator(products, request.laborPrice());
 
