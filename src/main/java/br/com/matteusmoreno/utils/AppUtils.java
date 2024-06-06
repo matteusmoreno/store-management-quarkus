@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public class AppUtils {
@@ -72,13 +73,14 @@ public class AppUtils {
         return Period.between(birtDate, currentlyDate).getYears();
     }
 
-    public BigDecimal costCalculator(List<Product> products, BigDecimal laborPrice) {
-        BigDecimal productsPrice = products.stream()
-                .map(Product::getSalePrice)
+    public BigDecimal costCalculator(Map<Product, Integer> productsWithQuantities, BigDecimal laborPrice) {
+        BigDecimal productsCost = productsWithQuantities.entrySet().stream()
+                .map(entry -> entry.getKey().getSalePrice().multiply(BigDecimal.valueOf(entry.getValue())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return productsPrice.add(laborPrice);
+        return productsCost.add(laborPrice);
     }
+
 
 
     public void sendEmail(String templateName, String to, String subject, String name) {

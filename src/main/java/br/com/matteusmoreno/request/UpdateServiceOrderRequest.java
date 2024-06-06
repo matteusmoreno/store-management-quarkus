@@ -5,7 +5,7 @@ import br.com.matteusmoreno.domain.Employee;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public record UpdateServiceOrderRequest(
@@ -14,6 +14,6 @@ public record UpdateServiceOrderRequest(
         Customer customer,
         Employee employee,
         String description,
-        List<Long> products,
+        Map<Long, Integer> products,
         BigDecimal laborPrice) {
 }

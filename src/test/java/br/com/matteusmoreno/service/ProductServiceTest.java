@@ -46,7 +46,7 @@ class ProductServiceTest {
     @DisplayName("Should create a product and save it to the repository")
     void shouldCreateProductAndSaveToRepository() {
 
-        CreateProductRequest request = new CreateProductRequest("Product", "Product description",
+        CreateProductRequest request = new CreateProductRequest("PRODUCT", "Product description",
                 new BigDecimal("100"), new BigDecimal("200"), "Nike", 10);
 
         Product result = productService.createProduct(request);
@@ -97,7 +97,7 @@ class ProductServiceTest {
     @DisplayName("Should update product and save it to the repository")
     void shouldUpdateProductAndSaveToRepository() {
 
-        UpdateProductRequest request = new UpdateProductRequest(id, "New name", "New description",
+        UpdateProductRequest request = new UpdateProductRequest(id, "NEW NAME", "New description",
                 new BigDecimal("300.00"), new BigDecimal("400.00"), "Puma", 100);
 
         when(productRepository.findById(request.id())).thenReturn(Optional.ofNullable(product));

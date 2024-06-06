@@ -3,7 +3,7 @@ package br.com.matteusmoreno.controller;
 import br.com.matteusmoreno.domain.ServiceOrder;
 import br.com.matteusmoreno.request.CreateServiceOrderRequest;
 import br.com.matteusmoreno.request.UpdateServiceOrderRequest;
-import br.com.matteusmoreno.response.ServiceOrderDetailsResponse;
+import br.com.matteusmoreno.response.service_order_response.ServiceOrderDetailsResponse;
 import br.com.matteusmoreno.service.ServiceOrderService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -30,12 +30,12 @@ public class ServiceOrderController {
     @POST
     @Path("/create")
     public Response create(@RequestBody @Valid CreateServiceOrderRequest request, @Context UriInfo uriInfo) {
-        ServiceOrder serviceOrder = serviceOrderService.createServiceOrder(request);
+        ServiceOrderDetailsResponse serviceOrder = serviceOrderService.createServiceOrder(request);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(serviceOrder.getId().toString());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(serviceOrder.id().toString());
         URI uri = uriBuilder.build();
 
-        return Response.created(uri).entity(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.created(uri).entity(serviceOrder).build();
     }
 
     @GET
@@ -43,15 +43,15 @@ public class ServiceOrderController {
     public Response detailsById(@PathParam("id") UUID id) {
         ServiceOrder serviceOrder = serviceOrderService.serviceOrderDetails(id);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.ok(serviceOrder).build();
     }
 
     @PUT
     @Path("/update")
     public Response update(@RequestBody @Valid UpdateServiceOrderRequest request) {
-        ServiceOrder serviceOrder = serviceOrderService.updateServiceOrder(request);
+        ServiceOrderDetailsResponse serviceOrder = serviceOrderService.updateServiceOrder(request);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.ok(serviceOrder).build();
     }
 
     @PATCH
@@ -59,7 +59,7 @@ public class ServiceOrderController {
     public Response start(@PathParam("id") UUID id) {
         ServiceOrder serviceOrder = serviceOrderService.startService(id);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.ok(serviceOrder).build();
     }
 
     @PATCH
@@ -67,7 +67,7 @@ public class ServiceOrderController {
     public Response complete(@PathParam("id") UUID id) {
         ServiceOrder serviceOrder = serviceOrderService.completeService(id);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.ok(serviceOrder).build();
     }
 
     @PATCH
@@ -75,6 +75,6 @@ public class ServiceOrderController {
     public Response cancel(@PathParam("id") UUID id) {
         ServiceOrder serviceOrder = serviceOrderService.cancelService(id);
 
-        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+        return Response.ok(serviceOrder).build();
     }
 }
