@@ -1,0 +1,8 @@
+Hello {name},
+
+Welcome to Store Management! We are excited to have you on board.
+
+Feel free to explore our services and let us know if you have any questions.
+
+Best regards,
+The Store Management Team

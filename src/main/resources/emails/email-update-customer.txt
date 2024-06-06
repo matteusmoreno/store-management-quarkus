@@ -1,0 +1,8 @@
+Hello {name},
+
+Your account information has been successfully updated.
+
+If you did not make this change, please contact our support team immediately.
+
+Best regards,
+The Store Management Team

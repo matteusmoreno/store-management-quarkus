@@ -1,0 +1,8 @@
+Hello {name},
+
+Welcome back to Store Management! Your account has been successfully re-enabled.
+
+We're glad to have you back. If you have any questions or need assistance, please feel free to reach out to us.
+
+Best regards,
+The Store Management Team

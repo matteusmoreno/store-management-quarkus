@@ -1,0 +1,8 @@
+Hello {name},
+
+We are sorry to see you go. Your account has been successfully deleted.
+
+If you have any feedback or need assistance, please feel free to reach out to us.
+
+Best regards,
+The Store Management Team

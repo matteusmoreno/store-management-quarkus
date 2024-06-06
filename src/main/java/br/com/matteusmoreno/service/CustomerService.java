@@ -37,6 +37,8 @@ public class CustomerService {
         customer.setAddress(address);
 
         customerRepository.save(customer);
+        appUtils.sendEmail("email-create-customer.txt", customer.getEmail(), "Welcome to Store Management", customer.getName());
+
         return customer;
     }
 
@@ -76,6 +78,7 @@ public class CustomerService {
 
         customer.setUpdatedAt(LocalDateTime.now());
         customerRepository.save(customer);
+        appUtils.sendEmail("email-update-customer.txt", customer.getEmail(), "Updated Customer", customer.getName());
 
         return customer;
     }
@@ -87,6 +90,7 @@ public class CustomerService {
         customer.setDeletedAt(LocalDateTime.now());
 
         customerRepository.save(customer);
+        appUtils.sendEmail("email-disable-customer.txt", customer.getEmail(), "Disable Customer", customer.getName());
     }
 
     @Transactional
@@ -97,6 +101,7 @@ public class CustomerService {
         customer.setUpdatedAt(LocalDateTime.now());
 
         customerRepository.save(customer);
+        appUtils.sendEmail("email-enable-customer.txt", customer.getEmail(), "Enable Customer", customer.getName());
 
         return customer;
     }
