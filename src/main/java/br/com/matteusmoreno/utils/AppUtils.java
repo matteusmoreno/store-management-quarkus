@@ -4,25 +4,21 @@ import br.com.matteusmoreno.client.brasil_api.BrasilApiClient;
 import br.com.matteusmoreno.client.brasil_api.BrasilApiResponse;
 import br.com.matteusmoreno.client.viacep.ViaCepClient;
 import br.com.matteusmoreno.client.viacep.ViaCepResponse;
-import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Product;
-import br.com.matteusmoreno.domain.Supplier;
-import br.com.matteusmoreno.exception.EmailTemplateReadException;
-import br.com.matteusmoreno.exception.InvalidCepException;
-import br.com.matteusmoreno.repository.AddressRepository;
+import br.com.matteusmoreno.address.Address;
+import br.com.matteusmoreno.supplier.Supplier;
+import br.com.matteusmoreno.exception.exception_class.EmailTemplateReadException;
+import br.com.matteusmoreno.exception.exception_class.InvalidCepException;
+import br.com.matteusmoreno.address.AddressRepository;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
-import java.util.Map;
 
 @ApplicationScoped
 public class AppUtils {
@@ -72,15 +68,6 @@ public class AppUtils {
 
         return Period.between(birtDate, currentlyDate).getYears();
     }
-
-    public BigDecimal costCalculator(Map<Product, Integer> productsWithQuantities, BigDecimal laborPrice) {
-        BigDecimal productsCost = productsWithQuantities.entrySet().stream()
-                .map(entry -> entry.getKey().getSalePrice().multiply(BigDecimal.valueOf(entry.getValue())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return productsCost.add(laborPrice);
-    }
-
 
 
     public void sendEmail(String templateName, String to, String subject, String name) {

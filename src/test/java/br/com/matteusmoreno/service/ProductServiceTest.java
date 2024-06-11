@@ -1,10 +1,10 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.domain.Product;
-import br.com.matteusmoreno.domain.Supplier;
-import br.com.matteusmoreno.repository.ProductRepository;
-import br.com.matteusmoreno.request.CreateProductRequest;
-import br.com.matteusmoreno.request.UpdateProductRequest;
+import br.com.matteusmoreno.product.Product;
+import br.com.matteusmoreno.product.ProductRepository;
+import br.com.matteusmoreno.product.ProductService;
+import br.com.matteusmoreno.product.product_request.CreateProductRequest;
+import br.com.matteusmoreno.product.product_request.UpdateProductRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -38,8 +37,8 @@ class ProductServiceTest {
         MockitoAnnotations.openMocks(this);
 
         id = 1L;
-        product = new Product(id, "Product", "Product description", new BigDecimal("100"), new BigDecimal("200"),
-                "Nike", 10, LocalDateTime.now(), null, null, true);
+        product = new Product(id, "PRODUCT", "Product description", new BigDecimal("100"), new BigDecimal("200"),
+                "NIKE", 10, LocalDateTime.now(), null, null, true);
     }
 
     @Test
@@ -47,7 +46,7 @@ class ProductServiceTest {
     void shouldCreateProductAndSaveToRepository() {
 
         CreateProductRequest request = new CreateProductRequest("PRODUCT", "Product description",
-                new BigDecimal("100"), new BigDecimal("200"), "Nike", 10);
+                new BigDecimal("100"), new BigDecimal("200"), "NIKE", 10);
 
         Product result = productService.createProduct(request);
         result.setId(id);
@@ -98,7 +97,7 @@ class ProductServiceTest {
     void shouldUpdateProductAndSaveToRepository() {
 
         UpdateProductRequest request = new UpdateProductRequest(id, "NEW NAME", "New description",
-                new BigDecimal("300.00"), new BigDecimal("400.00"), "Puma", 100);
+                new BigDecimal("300.00"), new BigDecimal("400.00"), "PUMA", 100);
 
         when(productRepository.findById(request.id())).thenReturn(Optional.ofNullable(product));
 

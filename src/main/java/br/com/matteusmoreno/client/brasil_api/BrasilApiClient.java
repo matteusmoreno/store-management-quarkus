@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.client.brasil_api;
 
-import br.com.matteusmoreno.exception.HandleInvalidCnpjException;
+import br.com.matteusmoreno.exception.exception_handler.HandleInvalidCnpjException;
 import jakarta.enterprise.inject.Default;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

@@ -144,6 +144,7 @@
       <artifactId>quarkus-mailer</artifactId>
     </dependency>
 
+
   </dependencies>
 
 
@@ -191,20 +192,14 @@
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
         <version>10.12.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repair</goal>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
-          <url>jdbc:mysql://localhost:3306/store_management</url>
-          <user>root</user>
-          <password>root</password>
+          <configFiles>
+            <configFile>src/main/resources/flyway.properties</configFile>
+          </configFiles>
         </configuration>
       </plugin>
+
+
       <plugin>
         <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>

@@ -1,12 +1,11 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Customer;
-import br.com.matteusmoreno.domain.Supplier;
-import br.com.matteusmoreno.repository.SupplierRepository;
-import br.com.matteusmoreno.request.CreateSupplierRequest;
-import br.com.matteusmoreno.request.UpdateCustomerRequest;
-import br.com.matteusmoreno.request.UpdateSupplierRequest;
+import br.com.matteusmoreno.address.Address;
+import br.com.matteusmoreno.supplier.Supplier;
+import br.com.matteusmoreno.supplier.SupplierRepository;
+import br.com.matteusmoreno.supplier.SupplierService;
+import br.com.matteusmoreno.supplier.supplier_request.CreateSupplierRequest;
+import br.com.matteusmoreno.supplier.supplier_request.UpdateSupplierRequest;
 import br.com.matteusmoreno.utils.AppUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

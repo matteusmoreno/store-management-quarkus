@@ -6,7 +6,7 @@ services:
     image: mysql:8.0
     command:
       - --default-authentication-plugin=caching_sha2_password
-    restart: unless-stopped
+    restart: always
     env_file:
       - env/mysql.env
     ports:

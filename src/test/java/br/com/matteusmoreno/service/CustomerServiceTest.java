@@ -1,10 +1,11 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Customer;
-import br.com.matteusmoreno.repository.CustomerRepository;
-import br.com.matteusmoreno.request.CreateCustomerRequest;
-import br.com.matteusmoreno.request.UpdateCustomerRequest;
+import br.com.matteusmoreno.address.Address;
+import br.com.matteusmoreno.customer.Customer;
+import br.com.matteusmoreno.customer.CustomerRepository;
+import br.com.matteusmoreno.customer.CustomerService;
+import br.com.matteusmoreno.customer.customer_request.CreateCustomerRequest;
+import br.com.matteusmoreno.customer.customer_request.UpdateCustomerRequest;
 import br.com.matteusmoreno.utils.AppUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;

@@ -1,11 +1,12 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.constant.EmployeeRole;
-import br.com.matteusmoreno.domain.Address;
-import br.com.matteusmoreno.domain.Employee;
-import br.com.matteusmoreno.repository.EmployeeRepository;
-import br.com.matteusmoreno.request.CreateEmployeeRequest;
-import br.com.matteusmoreno.request.UpdateEmployeeRequest;
+import br.com.matteusmoreno.employee.EmployeeRole;
+import br.com.matteusmoreno.address.Address;
+import br.com.matteusmoreno.employee.Employee;
+import br.com.matteusmoreno.employee.EmployeeService;
+import br.com.matteusmoreno.employee.EmployeeRepository;
+import br.com.matteusmoreno.employee.employee_request.CreateEmployeeRequest;
+import br.com.matteusmoreno.employee.employee_request.UpdateEmployeeRequest;
 import br.com.matteusmoreno.utils.AppUtils;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
