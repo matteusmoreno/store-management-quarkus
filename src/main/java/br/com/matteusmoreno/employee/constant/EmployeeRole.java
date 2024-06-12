@@ -1,4 +1,4 @@
-package br.com.matteusmoreno.employee;
+package br.com.matteusmoreno.employee.constant;
 
 import lombok.Getter;
 

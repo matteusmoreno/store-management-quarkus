@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.employee.employee_request;
 
-import br.com.matteusmoreno.employee.EmployeeRole;
+import br.com.matteusmoreno.employee.constant.EmployeeRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

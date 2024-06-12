@@ -1,6 +1,6 @@
 package br.com.matteusmoreno.service;
 
-import br.com.matteusmoreno.employee.EmployeeRole;
+import br.com.matteusmoreno.employee.constant.EmployeeRole;
 import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.employee.Employee;
 import br.com.matteusmoreno.employee.EmployeeService;

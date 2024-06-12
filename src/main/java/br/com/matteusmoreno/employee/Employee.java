@@ -1,6 +1,7 @@
 package br.com.matteusmoreno.employee;
 
 import br.com.matteusmoreno.address.Address;
+import br.com.matteusmoreno.employee.constant.EmployeeRole;
 import br.com.matteusmoreno.employee.employee_request.CreateEmployeeRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
