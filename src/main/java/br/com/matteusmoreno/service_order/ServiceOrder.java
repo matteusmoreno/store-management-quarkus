@@ -25,7 +25,7 @@ public class ServiceOrder {
     private ObjectId id;
     private Customer customer;
     private Employee employee;
-    private List<ServiceOrderProduct> products = new ArrayList<>();
+    private List<ServiceOrderProduct> serviceOrderProducts = new ArrayList<>();
     private BigDecimal laborPrice;
     private BigDecimal totalCost;
     private LocalDateTime createdAt;

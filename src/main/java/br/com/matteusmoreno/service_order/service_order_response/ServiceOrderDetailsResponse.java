@@ -24,7 +24,7 @@ public record ServiceOrderDetailsResponse(
                 serviceOrder.getId(),
                 new ResumeCustomerResponse(serviceOrder.getCustomer()),
                 new ResumeEmployeeResponse(serviceOrder.getEmployee()),
-                serviceOrder.getProducts().stream()
+                serviceOrder.getServiceOrderProducts().stream()
                         .map(ResumeServiceOrderProductResponse::new)
                         .collect(Collectors.toList()),
                 serviceOrder.getLaborPrice(),

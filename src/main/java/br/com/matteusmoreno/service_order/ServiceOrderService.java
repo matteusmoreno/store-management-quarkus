@@ -1,5 +1,6 @@
 package br.com.matteusmoreno.service_order;
 
+import br.com.matteusmoreno.accounts_receivable.AccountReceivableService;
 import br.com.matteusmoreno.customer.Customer;
 import br.com.matteusmoreno.customer.CustomerRepository;
 import br.com.matteusmoreno.employee.Employee;
@@ -24,13 +25,15 @@ public class ServiceOrderService {
     private final CustomerRepository customerRepository;
     private final EmployeeRepository employeeRepository;
     private final ServiceOrderProductService serviceOrderProductService;
+    private final AccountReceivableService accountReceivableService;
 
     @Inject
-    public ServiceOrderService(ServiceOrderRepository serviceOrderRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, ServiceOrderProductService serviceOrderProductService) {
+    public ServiceOrderService(ServiceOrderRepository serviceOrderRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, ServiceOrderProductService serviceOrderProductService, AccountReceivableService accountReceivableService) {
         this.serviceOrderRepository = serviceOrderRepository;
         this.customerRepository = customerRepository;
         this.employeeRepository = employeeRepository;
         this.serviceOrderProductService = serviceOrderProductService;
+        this.accountReceivableService = accountReceivableService;
     }
 
     public ServiceOrder createServiceOrder(CreateServiceOrderRequest request) {
@@ -46,13 +49,14 @@ public class ServiceOrderService {
         ServiceOrder serviceOrder = new ServiceOrder();
         serviceOrder.setCustomer(customer);
         serviceOrder.setEmployee(employee);
-        serviceOrder.setProducts(serviceOrderProductList);
+        serviceOrder.setServiceOrderProducts(serviceOrderProductList);
         serviceOrder.setCreatedAt(LocalDateTime.now());
         serviceOrder.setServiceOrderStatus(ServiceOrderStatus.PENDING);
         serviceOrder.setLaborPrice(request.laborPrice());
         serviceOrder.setTotalCost(totalPriceServiceOrderProducts.add(serviceOrder.getLaborPrice()));
 
         serviceOrderRepository.persist(serviceOrder);
+        accountReceivableService.createAccountReceivable(serviceOrder);
 
         return serviceOrder;
     }
@@ -61,7 +65,7 @@ public class ServiceOrderService {
         return serviceOrderRepository.findById(id);
     }
 
-    // DEPOIS PENSAR SOBRE ATUALIZAR UMA SERVICE ORDER
+    // UPDATE SERVICE ORDER
 
     public ServiceOrder startServiceOrder(ObjectId id) {
         ServiceOrder serviceOrder = serviceOrderRepository.findById(id);
