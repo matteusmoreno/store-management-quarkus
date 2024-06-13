@@ -19,4 +19,22 @@ public class AccountReceivableService {
 
         accountReceivableRepository.persist(accountReceivable);
     }
+
+    public void payAccountReceivable(ServiceOrder serviceOrder) {
+        AccountReceivable accountReceivable = accountReceivableRepository.findByServiceOrderId(serviceOrder.getId());
+
+        accountReceivable.setTransactionStatus(TransactionStatus.PAID);
+        accountReceivable.setServiceOrder(serviceOrder);
+
+        accountReceivableRepository.update(accountReceivable);
+    }
+
+    public void cancelAccountReceivable(ServiceOrder serviceOrder) {
+        AccountReceivable accountReceivable = accountReceivableRepository.findByServiceOrderId(serviceOrder.getId());
+
+        accountReceivable.setTransactionStatus(TransactionStatus.CANCELED);
+        accountReceivable.setServiceOrder(serviceOrder);
+
+        accountReceivableRepository.update(accountReceivable);
+    }
 }

@@ -19,9 +19,11 @@ public class AccountReceivable {
     private ObjectId id;
     private ServiceOrder serviceOrder;
     private BigDecimal amount;
+    private TransactionStatus transactionStatus;
 
     public AccountReceivable(ServiceOrder serviceOrder, BigDecimal amount) {
         this.amount = amount;
         this.serviceOrder = serviceOrder;
+        this.transactionStatus = TransactionStatus.PENDING;
     }
 }

@@ -7,7 +7,7 @@ public enum ServiceOrderStatus {
     PENDING("Pending"),
     IN_PROGRESS("In Progress"),
     COMPLETED("Completed"),
-    CANCELLED("Cancelled");
+    CANCELED("Canceled");
 
     private final String displayName;
 

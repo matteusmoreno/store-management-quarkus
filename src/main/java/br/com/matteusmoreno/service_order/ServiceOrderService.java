@@ -56,7 +56,6 @@ public class ServiceOrderService {
         serviceOrder.setTotalCost(totalPriceServiceOrderProducts.add(serviceOrder.getLaborPrice()));
 
         serviceOrderRepository.persist(serviceOrder);
-        accountReceivableService.createAccountReceivable(serviceOrder);
 
         return serviceOrder;
     }
@@ -72,6 +71,7 @@ public class ServiceOrderService {
 
         serviceOrder.setServiceOrderStatus(ServiceOrderStatus.IN_PROGRESS);
         serviceOrderRepository.update(serviceOrder);
+        accountReceivableService.createAccountReceivable(serviceOrder);
 
         return serviceOrder;
     }
@@ -81,6 +81,7 @@ public class ServiceOrderService {
 
         serviceOrder.setServiceOrderStatus(ServiceOrderStatus.COMPLETED);
         serviceOrderRepository.update(serviceOrder);
+        accountReceivableService.payAccountReceivable(serviceOrder);
 
         return serviceOrder;
     }
@@ -88,8 +89,9 @@ public class ServiceOrderService {
     public ServiceOrder cancelServiceOrder(ObjectId id) {
         ServiceOrder serviceOrder = serviceOrderRepository.findById(id);
 
-        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.CANCELLED);
+        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.CANCELED);
         serviceOrderRepository.update(serviceOrder);
+        accountReceivableService.cancelAccountReceivable(serviceOrder);
 
         return serviceOrder;
     }
