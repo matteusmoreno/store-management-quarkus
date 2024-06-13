@@ -3,7 +3,6 @@ package br.com.matteusmoreno.service_order.service_order_response;
 import br.com.matteusmoreno.customer.customer_response.ResumeCustomerResponse;
 import br.com.matteusmoreno.employee.employee_response.ResumeEmployeeResponse;
 import br.com.matteusmoreno.service_order.ServiceOrder;
-import br.com.matteusmoreno.service_order.constant.ServiceOrderStatus;
 import br.com.matteusmoreno.service_order_product.service_order_product_response.ResumeServiceOrderProductResponse;
 import org.bson.types.ObjectId;
 
@@ -18,7 +17,7 @@ public record ServiceOrderDetailsResponse(
         List<ResumeServiceOrderProductResponse> products,
         BigDecimal laborPrice,
         BigDecimal totalCost,
-        ServiceOrderStatus serviceOrderStatus) {
+        String serviceOrderStatus) {
 
     public ServiceOrderDetailsResponse(ServiceOrder serviceOrder) {
         this(
@@ -30,7 +29,7 @@ public record ServiceOrderDetailsResponse(
                         .collect(Collectors.toList()),
                 serviceOrder.getLaborPrice(),
                 serviceOrder.getTotalCost(),
-                serviceOrder.getServiceOrderStatus()
+                serviceOrder.getServiceOrderStatus().getDisplayName()
         );
     }
 }

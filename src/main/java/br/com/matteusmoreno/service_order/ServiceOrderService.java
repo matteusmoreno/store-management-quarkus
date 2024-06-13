@@ -5,11 +5,12 @@ import br.com.matteusmoreno.customer.CustomerRepository;
 import br.com.matteusmoreno.employee.Employee;
 import br.com.matteusmoreno.employee.EmployeeRepository;
 import br.com.matteusmoreno.service_order.constant.ServiceOrderStatus;
+import br.com.matteusmoreno.service_order.service_order_request.CreateServiceOrderRequest;
 import br.com.matteusmoreno.service_order_product.ServiceOrderProduct;
 import br.com.matteusmoreno.service_order_product.ServiceOrderProductService;
-import br.com.matteusmoreno.service_order.service_order_request.CreateServiceOrderRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -52,6 +53,39 @@ public class ServiceOrderService {
         serviceOrder.setTotalCost(totalPriceServiceOrderProducts.add(serviceOrder.getLaborPrice()));
 
         serviceOrderRepository.persist(serviceOrder);
+
+        return serviceOrder;
+    }
+
+    public ServiceOrder serviceOrderDetails(ObjectId id) {
+        return serviceOrderRepository.findById(id);
+    }
+
+    // DEPOIS PENSAR SOBRE ATUALIZAR UMA SERVICE ORDER
+
+    public ServiceOrder startServiceOrder(ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderRepository.findById(id);
+
+        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.IN_PROGRESS);
+        serviceOrderRepository.update(serviceOrder);
+
+        return serviceOrder;
+    }
+
+    public ServiceOrder completeServiceOrder(ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderRepository.findById(id);
+
+        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.COMPLETED);
+        serviceOrderRepository.update(serviceOrder);
+
+        return serviceOrder;
+    }
+
+    public ServiceOrder cancelServiceOrder(ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderRepository.findById(id);
+
+        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.CANCELLED);
+        serviceOrderRepository.update(serviceOrder);
 
         return serviceOrder;
     }

@@ -1,6 +1,5 @@
 package br.com.matteusmoreno.service_order_product.service_order_product_response;
 
-import br.com.matteusmoreno.product.Product;
 import br.com.matteusmoreno.product.product_response.ResumeProductResponse;
 import br.com.matteusmoreno.service_order_product.ServiceOrderProduct;
 

@@ -4,11 +4,9 @@ import br.com.matteusmoreno.service_order.service_order_request.CreateServiceOrd
 import br.com.matteusmoreno.service_order.service_order_response.ServiceOrderDetailsResponse;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
+import org.bson.types.ObjectId;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import java.net.URI;
@@ -34,5 +32,37 @@ public class ServiceOrderController {
         URI uri = uriBuilder.build();
 
         return Response.created(uri).entity(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @GET
+    @Path("/details/{id}")
+    public Response details(@PathParam("id") ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderService.serviceOrderDetails(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("/start-service/{id}")
+    public Response start(@PathParam("id") ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderService.startServiceOrder(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("/complete-service/{id}")
+    public Response complete(@PathParam("id") ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderService.completeServiceOrder(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
+    }
+
+    @PATCH
+    @Path("cancel-service/{id}")
+    public Response cancel(@PathParam("id") ObjectId id) {
+        ServiceOrder serviceOrder = serviceOrderService.cancelServiceOrder(id);
+
+        return Response.ok(new ServiceOrderDetailsResponse(serviceOrder)).build();
     }
 }
