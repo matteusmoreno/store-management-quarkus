@@ -5,10 +5,7 @@ import br.com.matteusmoreno.employee.Employee;
 import br.com.matteusmoreno.service_order.constant.ServiceOrderStatus;
 import br.com.matteusmoreno.service_order_product.ServiceOrderProduct;
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
@@ -19,6 +16,7 @@ import java.util.List;
 @MongoEntity(database = "store_management", collection = "service_orders")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class ServiceOrder {
 

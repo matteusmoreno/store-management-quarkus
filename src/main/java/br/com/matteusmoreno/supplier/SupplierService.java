@@ -1,5 +1,7 @@
 package br.com.matteusmoreno.supplier;
 
+import br.com.matteusmoreno.mapper.AddressMapper;
+import br.com.matteusmoreno.mapper.SupplierMapper;
 import br.com.matteusmoreno.supplier.supplier_request.CreateSupplierRequest;
 import br.com.matteusmoreno.supplier.supplier_request.UpdateSupplierRequest;
 import br.com.matteusmoreno.utils.AppUtils;
@@ -15,17 +17,19 @@ import java.util.UUID;
 public class SupplierService {
 
     private final SupplierRepository supplierRepository;
-    private final AppUtils appUtils;
+    private final SupplierMapper supplierMapper;
+    private final AddressMapper addressMapper;
 
     @Inject
-    public SupplierService(SupplierRepository supplierRepository, AppUtils appUtils) {
+    public SupplierService(SupplierRepository supplierRepository, SupplierMapper supplierMapper, AddressMapper addressMapper) {
         this.supplierRepository = supplierRepository;
-        this.appUtils = appUtils;
+        this.supplierMapper = supplierMapper;
+        this.addressMapper = addressMapper;
     }
 
     @Transactional
     public Supplier createSupplier(CreateSupplierRequest request) {
-        Supplier supplier = appUtils.setSupplierAttributes(request.cnpj());
+        Supplier supplier = supplierMapper.toEntity(request);
 
         supplierRepository.save(supplier);
 
@@ -50,7 +54,7 @@ public class SupplierService {
             supplier.setEmail(request.email());
         }
         if (request.zipcode() != null) {
-            supplier.setAddress(appUtils.setAddressAttributes(request.zipcode()));
+            supplier.setAddress(addressMapper.toEntity(request.zipcode()));
         }
 
         supplier.setUpdatedAt(LocalDateTime.now());

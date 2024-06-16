@@ -1,5 +1,6 @@
 package br.com.matteusmoreno.product;
 
+import br.com.matteusmoreno.mapper.ProductMapper;
 import br.com.matteusmoreno.product.product_request.CreateProductRequest;
 import br.com.matteusmoreno.product.product_request.UpdateProductRequest;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,28 +14,17 @@ import java.util.NoSuchElementException;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Inject
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Transactional
     public Product createProduct(CreateProductRequest request) {
-
-        String nameUpperCase = request.name().toUpperCase();
-        String manufacturerUpperCase = request.manufacturer().toUpperCase();
-
-        if (productRepository.existsByNameIgnoreCaseAndManufacturerIgnoreCase(nameUpperCase, manufacturerUpperCase)) {
-            Product product = productRepository.findByNameIgnoreCaseAndManufacturerIgnoreCase(nameUpperCase, manufacturerUpperCase);
-            product.setQuantity(product.getQuantity() + request.quantity());
-            productRepository.save(product);
-            return product;
-        }
-
-        Product product = new Product(request);
-        product.setName(nameUpperCase);
-        product.setManufacturer(manufacturerUpperCase);
+        Product product = productMapper.toEntity(request);
 
         productRepository.save(product);
 

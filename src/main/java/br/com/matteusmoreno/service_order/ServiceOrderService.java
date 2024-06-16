@@ -1,60 +1,30 @@
 package br.com.matteusmoreno.service_order;
 
 import br.com.matteusmoreno.accounts_receivable.AccountReceivableService;
-import br.com.matteusmoreno.customer.Customer;
-import br.com.matteusmoreno.customer.CustomerRepository;
-import br.com.matteusmoreno.employee.Employee;
-import br.com.matteusmoreno.employee.EmployeeRepository;
+import br.com.matteusmoreno.exception.exception_class.OutOfStockException;
+import br.com.matteusmoreno.mapper.ServiceOrderMapper;
 import br.com.matteusmoreno.service_order.constant.ServiceOrderStatus;
 import br.com.matteusmoreno.service_order.service_order_request.CreateServiceOrderRequest;
-import br.com.matteusmoreno.service_order_product.ServiceOrderProduct;
-import br.com.matteusmoreno.service_order_product.ServiceOrderProductService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @ApplicationScoped
 public class ServiceOrderService {
 
     private final ServiceOrderRepository serviceOrderRepository;
-    private final CustomerRepository customerRepository;
-    private final EmployeeRepository employeeRepository;
-    private final ServiceOrderProductService serviceOrderProductService;
+    private final ServiceOrderMapper serviceOrderMapper;
     private final AccountReceivableService accountReceivableService;
 
     @Inject
-    public ServiceOrderService(ServiceOrderRepository serviceOrderRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, ServiceOrderProductService serviceOrderProductService, AccountReceivableService accountReceivableService) {
+    public ServiceOrderService(ServiceOrderRepository serviceOrderRepository, ServiceOrderMapper serviceOrderMapper, AccountReceivableService accountReceivableService) {
         this.serviceOrderRepository = serviceOrderRepository;
-        this.customerRepository = customerRepository;
-        this.employeeRepository = employeeRepository;
-        this.serviceOrderProductService = serviceOrderProductService;
+        this.serviceOrderMapper = serviceOrderMapper;
         this.accountReceivableService = accountReceivableService;
     }
 
     public ServiceOrder createServiceOrder(CreateServiceOrderRequest request) {
-
-        Customer customer = customerRepository.findById(request.customerId()).orElseThrow(NoSuchElementException::new);
-        Employee employee = employeeRepository.findById(request.employeeId()).orElseThrow(NoSuchElementException::new);
-        List<ServiceOrderProduct> serviceOrderProductList = serviceOrderProductService.createServiceOrderProduct(request.serviceOrderProducts());
-        BigDecimal totalPriceServiceOrderProducts = serviceOrderProductList.stream()
-                .map(ServiceOrderProduct::getFinalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-
-        ServiceOrder serviceOrder = new ServiceOrder();
-        serviceOrder.setCustomer(customer);
-        serviceOrder.setEmployee(employee);
-        serviceOrder.setServiceOrderProducts(serviceOrderProductList);
-        serviceOrder.setCreatedAt(LocalDateTime.now());
-        serviceOrder.setServiceOrderStatus(ServiceOrderStatus.PENDING);
-        serviceOrder.setLaborPrice(request.laborPrice());
-        serviceOrder.setTotalCost(totalPriceServiceOrderProducts.add(serviceOrder.getLaborPrice()));
-
+        ServiceOrder serviceOrder = serviceOrderMapper.toEntity(request);
         serviceOrderRepository.persist(serviceOrder);
 
         return serviceOrder;

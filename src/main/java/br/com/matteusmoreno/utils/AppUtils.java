@@ -23,44 +23,11 @@ import java.time.Period;
 @ApplicationScoped
 public class AppUtils {
 
-    private final AddressRepository addressRepository;
-    private final ViaCepClient viaCepClient;
-    private final BrasilApiClient brasilApiClient;
     private final Mailer mailer;
 
     @Inject
-    public AppUtils(AddressRepository addressRepository, ViaCepClient viaCepClient, BrasilApiClient brasilApiClient, Mailer mailer) {
-        this.addressRepository = addressRepository;
-        this.viaCepClient = viaCepClient;
-        this.brasilApiClient = brasilApiClient;
+    public AppUtils(Mailer mailer) {
         this.mailer = mailer;
-    }
-
-    public Address setAddressAttributes(String zipcode) {
-        boolean addressExists = addressRepository.existsByZipcode(zipcode);
-        if (addressExists) {
-            return addressRepository.findByZipcode(zipcode);
-        }
-
-        ViaCepResponse viaCepResponse = viaCepClient.getAddress(zipcode);
-
-        if (viaCepResponse.cep() == null) {
-            throw new InvalidCepException("Invalid CEP");
-        }
-
-        return new Address(viaCepResponse);
-    }
-
-    public Supplier setSupplierAttributes(String cnpj) {
-        String formattedCnpj = cnpj.replace("-", "").replace("/", "");
-        BrasilApiResponse brasilApiResponse = brasilApiClient.getSupplier(formattedCnpj);
-        Address supplierAddress = setAddressAttributes(brasilApiResponse.cep());
-
-        Supplier supplier = new Supplier(brasilApiResponse);
-        supplier.setCnpj(cnpj);
-        supplier.setAddress(supplierAddress);
-
-        return supplier;
     }
 
     public Integer ageCalculator(LocalDate birtDate) {

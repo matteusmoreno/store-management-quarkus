@@ -1,5 +1,6 @@
 package br.com.matteusmoreno.accounts_receivable;
 
+import br.com.matteusmoreno.mapper.AccountReceivableMapper;
 import br.com.matteusmoreno.service_order.ServiceOrder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -8,14 +9,16 @@ import jakarta.inject.Inject;
 public class AccountReceivableService {
 
     private final AccountReceivableRepository accountReceivableRepository;
+    private final AccountReceivableMapper accountReceivableMapper;
 
     @Inject
-    public AccountReceivableService(AccountReceivableRepository accountReceivableRepository) {
+    public AccountReceivableService(AccountReceivableRepository accountReceivableRepository, AccountReceivableMapper accountReceivableMapper) {
         this.accountReceivableRepository = accountReceivableRepository;
+        this.accountReceivableMapper = accountReceivableMapper;
     }
 
     public void createAccountReceivable(ServiceOrder serviceOrder) {
-        AccountReceivable accountReceivable = new AccountReceivable(serviceOrder, serviceOrder.getTotalCost());
+        AccountReceivable accountReceivable = accountReceivableMapper.toEntity(serviceOrder);
 
         accountReceivableRepository.persist(accountReceivable);
     }

@@ -2,10 +2,7 @@ package br.com.matteusmoreno.accounts_receivable;
 
 import br.com.matteusmoreno.service_order.ServiceOrder;
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 
 import java.math.BigDecimal;
@@ -13,6 +10,7 @@ import java.math.BigDecimal;
 @MongoEntity(database = "store_management", collection = "accounts_receivable")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class AccountReceivable {
 
@@ -20,10 +18,4 @@ public class AccountReceivable {
     private ServiceOrder serviceOrder;
     private BigDecimal amount;
     private TransactionStatus transactionStatus;
-
-    public AccountReceivable(ServiceOrder serviceOrder, BigDecimal amount) {
-        this.amount = amount;
-        this.serviceOrder = serviceOrder;
-        this.transactionStatus = TransactionStatus.PENDING;
-    }
 }

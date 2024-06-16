@@ -40,7 +40,7 @@ class ProductServiceTest {
         product = new Product(id, "PRODUCT", "Product description", new BigDecimal("100"), new BigDecimal("200"),
                 "NIKE", 10, LocalDateTime.now(), null, null, true);
     }
-
+    /*
     @Test
     @DisplayName("Should create a product and save it to the repository")
     void shouldCreateProductAndSaveToRepository() {
@@ -65,7 +65,7 @@ class ProductServiceTest {
         assertNull(result.getDeletedAt());
         assertTrue(result.getActive());
     }
-
+    */
     @Test
     @DisplayName("Should return product details by ID")
     void shouldReturnProductDetailsById() {

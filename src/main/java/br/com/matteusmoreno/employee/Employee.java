@@ -4,10 +4,7 @@ import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.employee.constant.EmployeeRole;
 import br.com.matteusmoreno.employee.employee_request.CreateEmployeeRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +15,7 @@ import java.util.UUID;
 @Table(name = "employees")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class Employee {
 

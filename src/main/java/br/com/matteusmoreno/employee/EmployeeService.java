@@ -3,6 +3,8 @@ package br.com.matteusmoreno.employee;
 import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.employee.employee_request.CreateEmployeeRequest;
 import br.com.matteusmoreno.employee.employee_request.UpdateEmployeeRequest;
+import br.com.matteusmoreno.mapper.AddressMapper;
+import br.com.matteusmoreno.mapper.EmployeeMapper;
 import br.com.matteusmoreno.utils.AppUtils;
 import br.com.matteusmoreno.utils.Validation;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,12 +19,16 @@ import java.util.UUID;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
+    private final AddressMapper addressMapper;
     private final Validation validation;
     private final AppUtils appUtils;
 
     @Inject
-    public EmployeeService(EmployeeRepository employeeRepository, Validation validation, AppUtils appUtils) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, AddressMapper addressMapper, Validation validation, AppUtils appUtils) {
         this.employeeRepository = employeeRepository;
+        this.employeeMapper = employeeMapper;
+        this.addressMapper = addressMapper;
         this.validation = validation;
         this.appUtils = appUtils;
     }
@@ -30,15 +36,7 @@ public class EmployeeService {
 
     @Transactional
     public Employee createEmployee(CreateEmployeeRequest request) {
-
-        validation.validateEntryDuplicity(request.email(), request.cpf(), request.phone());
-
-        Address address = appUtils.setAddressAttributes(request.zipcode());
-        Integer age = appUtils.ageCalculator(request.birthDate());
-
-        Employee employee = new Employee(request);
-        employee.setAge(age);
-        employee.setAddress(address);
+        Employee employee = employeeMapper.toEntity(request);
 
         employeeRepository.save(employee);
         return employee;
@@ -77,7 +75,7 @@ public class EmployeeService {
             employee.setCpf(request.cpf());
         }
         if (request.zipcode() != null) {
-            employee.setAddress(appUtils.setAddressAttributes(request.zipcode()));
+            employee.setAddress(addressMapper.toEntity(request.zipcode()));
         }
 
         employee.setUpdatedAt(LocalDateTime.now());

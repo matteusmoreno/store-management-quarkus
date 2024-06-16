@@ -3,10 +3,7 @@ package br.com.matteusmoreno.supplier;
 import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.client.brasil_api.BrasilApiResponse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Table(name = "suppliers")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class Supplier {
 
@@ -40,15 +38,4 @@ public class Supplier {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
     private Boolean active;
-
-    public Supplier(BrasilApiResponse response) {
-        this.corporateName = response.razao_social();
-        this.tradeName = response.nome_fantasia();
-        this.phone = response.ddd_telefone_1();
-        this.registrationStatus = response.descricao_situacao_cadastral();
-        this.email = response.email();
-        this.legalNature = response.natureza_juridica();
-        this.createdAt = LocalDateTime.now();
-        this.active = true;
-    }
 }

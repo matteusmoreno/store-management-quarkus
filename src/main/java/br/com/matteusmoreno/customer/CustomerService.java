@@ -4,6 +4,8 @@ import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.customer.customer_request.CreateCustomerRequest;
 import br.com.matteusmoreno.customer.customer_request.UpdateCustomerRequest;
 import br.com.matteusmoreno.exception.exception_class.DuplicateEntryException;
+import br.com.matteusmoreno.mapper.AddressMapper;
+import br.com.matteusmoreno.mapper.CustomerMapper;
 import br.com.matteusmoreno.utils.AppUtils;
 import br.com.matteusmoreno.utils.Validation;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,27 +21,23 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
     private final Validation validation;
     private final AppUtils appUtils;
 
     @Inject
-    public CustomerService(CustomerRepository customerRepository, Validation validation, AppUtils appUtils) {
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper, AddressMapper addressMapper, Validation validation, AppUtils appUtils) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
+        this.addressMapper = addressMapper;
         this.validation = validation;
         this.appUtils = appUtils;
     }
 
     @Transactional
     public Customer createCustomer(CreateCustomerRequest request) {
-
-        validation.validateEntryDuplicity(request.email(), request.cpf(), request.phone());
-
-        Address address = appUtils.setAddressAttributes(request.zipcode());
-        Integer age = appUtils.ageCalculator(request.birthDate());
-
-        Customer customer = new Customer(request);
-        customer.setAge(age);
-        customer.setAddress(address);
+        Customer customer = customerMapper.toEntity(request);
 
         customerRepository.save(customer);
         return customer;
@@ -78,7 +76,7 @@ public class CustomerService {
             customer.setCpf(request.cpf());
         }
         if (request.zipcode() != null) {
-            customer.setAddress(appUtils.setAddressAttributes(request.zipcode()));
+            customer.setAddress(addressMapper.toEntity(request.zipcode()));
         }
 
         customer.setUpdatedAt(LocalDateTime.now());

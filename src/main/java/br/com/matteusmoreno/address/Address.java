@@ -1,8 +1,8 @@
 package br.com.matteusmoreno.address;
 
-import br.com.matteusmoreno.client.viacep.ViaCepResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "addresses")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 public class Address {
 
@@ -20,12 +21,4 @@ public class Address {
     private String city;
     private String neighborhood;
     private String state;
-
-    public Address(ViaCepResponse response) {
-        this.zipcode = response.cep();
-        this.street = response.logradouro();
-        this.city = response.localidade();
-        this.neighborhood = response.bairro();
-        this.state = response.uf();
-    }
 }

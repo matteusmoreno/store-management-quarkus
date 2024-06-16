@@ -1,27 +1,23 @@
 package br.com.matteusmoreno.service_order_product;
 
-import br.com.matteusmoreno.exception.exception_class.OutOfStockException;
-import br.com.matteusmoreno.product.Product;
-import br.com.matteusmoreno.product.ProductRepository;
+import br.com.matteusmoreno.mapper.ServiceOrderProductMapper;
 import br.com.matteusmoreno.service_order_product.service_order_product_request.CreateServiceOrderProductRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @ApplicationScoped
 public class ServiceOrderProductService {
 
     private final ServiceOrderProductRepository serviceOrderProductRepository;
-    private final ProductRepository productRepository;
+    private final ServiceOrderProductMapper serviceOrderProductMapper;
 
     @Inject
-    public ServiceOrderProductService(ServiceOrderProductRepository serviceOrderProductRepository, ProductRepository productRepository) {
+    public ServiceOrderProductService(ServiceOrderProductRepository serviceOrderProductRepository, ServiceOrderProductMapper serviceOrderProductMapper) {
         this.serviceOrderProductRepository = serviceOrderProductRepository;
-        this.productRepository = productRepository;
+        this.serviceOrderProductMapper = serviceOrderProductMapper;
     }
 
     public List<ServiceOrderProduct> createServiceOrderProduct(List<CreateServiceOrderProductRequest> request) {
@@ -29,22 +25,7 @@ public class ServiceOrderProductService {
         List<ServiceOrderProduct> serviceOrderProductList = new ArrayList<>();
 
         request.forEach(serviceOrderProductRequest -> {
-            Product product = productRepository.findById(serviceOrderProductRequest.productId()).orElseThrow(NoSuchElementException::new);
-
-            if (serviceOrderProductRequest.quantity() > product.getQuantity()) {
-                throw new OutOfStockException("Product Out of Stock");
-            }
-
-            Integer serviceOrderQuantity = serviceOrderProductRequest.quantity();
-
-            ServiceOrderProduct serviceOrderProduct = new ServiceOrderProduct();
-            serviceOrderProduct.setProduct(product);
-            serviceOrderProduct.setQuantity(serviceOrderQuantity);
-            serviceOrderProduct.setUnitaryPrice(product.getSalePrice());
-            serviceOrderProduct.setFinalPrice(product.getSalePrice().multiply(BigDecimal.valueOf(serviceOrderQuantity)));
-
-            product.setQuantity(product.getQuantity() - serviceOrderQuantity);
-            productRepository.save(product);
+            ServiceOrderProduct serviceOrderProduct = serviceOrderProductMapper.toEntity(serviceOrderProductRequest);
 
             serviceOrderProductRepository.persist(serviceOrderProduct);
             serviceOrderProductList.add(serviceOrderProduct);

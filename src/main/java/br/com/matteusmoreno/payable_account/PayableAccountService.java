@@ -1,9 +1,8 @@
 package br.com.matteusmoreno.payable_account;
 
 import br.com.matteusmoreno.accounts_receivable.TransactionStatus;
+import br.com.matteusmoreno.mapper.PayableAccountMapper;
 import br.com.matteusmoreno.payable_account.payable_account_request.CreatePayableAccountRequest;
-import br.com.matteusmoreno.supplier.Supplier;
-import br.com.matteusmoreno.supplier.SupplierRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bson.types.ObjectId;
@@ -12,23 +11,17 @@ import org.bson.types.ObjectId;
 public class PayableAccountService {
 
     private final PayableAccountRepository payableAccountRepository;
-    private final SupplierRepository supplierRepository;
+    private final PayableAccountMapper payableAccountMapper;
 
     @Inject
-    public PayableAccountService(PayableAccountRepository payableAccountRepository, SupplierRepository supplierRepository) {
+    public PayableAccountService(PayableAccountRepository payableAccountRepository, PayableAccountMapper payableAccountMapper) {
         this.payableAccountRepository = payableAccountRepository;
-        this.supplierRepository = supplierRepository;
+
+        this.payableAccountMapper = payableAccountMapper;
     }
 
     public PayableAccount createPayableAccount(CreatePayableAccountRequest request) {
-        Supplier supplier = supplierRepository.findById(request.supplierId()).orElseThrow();
-
-        PayableAccount payableAccount = new PayableAccount();
-        payableAccount.setSupplier(supplier);
-        payableAccount.setDescription(request.description());
-        payableAccount.setAmount(request.amount());
-        payableAccount.setPaymentDate(request.paymentDate());
-        payableAccount.setTransactionStatus(TransactionStatus.PENDING);
+        PayableAccount payableAccount = payableAccountMapper.toEntity(request);
 
         payableAccountRepository.persist(payableAccount);
 

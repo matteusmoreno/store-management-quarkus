@@ -4,10 +4,7 @@ import br.com.matteusmoreno.address.Address;
 import br.com.matteusmoreno.customer.customer_request.CreateCustomerRequest;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +14,7 @@ import java.util.UUID;
 @Table(name = "customers")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class Customer extends PanacheEntityBase {
 
@@ -38,17 +36,6 @@ public class Customer extends PanacheEntityBase {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
     private Boolean active;
-
-
-    public Customer(CreateCustomerRequest request) {
-        this.name = request.name();
-        this.birthDate = request.birthDate();
-        this.phone = request.phone();
-        this.email = request.email();
-        this.cpf = request.cpf();
-        this.createdAt = LocalDateTime.now();
-        this.active = true;
-    }
 }
 
 

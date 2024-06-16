@@ -2,10 +2,7 @@ package br.com.matteusmoreno.product;
 
 import br.com.matteusmoreno.product.product_request.CreateProductRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter @Setter
 public class Product {
 
@@ -34,15 +32,4 @@ public class Product {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
     private Boolean active;
-
-    public Product(CreateProductRequest request) {
-        this.name = request.name();
-        this.description = request.description();
-        this.purchasePrice = request.purchasePrice();
-        this.salePrice = request.salePrice();
-        this.manufacturer = request.manufacturer();
-        this.quantity = request.quantity();
-        this.createdAt = LocalDateTime.now();
-        this.active = true;
-    }
 }
